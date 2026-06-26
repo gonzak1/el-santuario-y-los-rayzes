@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.Processing;
 string inputFolder = @"imgs/";
 string outputFile = @"imgs/sheets/deck.png";
 
-const int columns = 5;
+const int columns = 8;
 
 var files = Directory
     .GetFiles(inputFolder, "*.png")
