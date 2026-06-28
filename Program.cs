@@ -37,15 +37,17 @@ foreach (var subfolder in subfolders.OrderBy(d => d))
     int cardWidth = first.Width;
     int cardHeight = first.Height;
 
-    int rows = (int)Math.Ceiling(files.Count / (double)columns);
+    // Always at least 2 rows: cap columns so at least 1 card spills to row 2
+    int effectiveCols = Math.Min(columns, Math.Max(1, files.Count - 1));
+    int rows = (int)Math.Ceiling(files.Count / (double)effectiveCols);
 
-    using var sheet = new Image<Rgba32>(columns * cardWidth, rows * cardHeight);
+    using var sheet = new Image<Rgba32>(effectiveCols * cardWidth, rows * cardHeight);
 
     for (int i = 0; i < files.Count; i++)
     {
         using var img = Image.Load<Rgba32>(files[i]);
-        int x = (i % columns) * cardWidth;
-        int y = (i / columns) * cardHeight;
+        int x = (i % effectiveCols) * cardWidth;
+        int y = (i / effectiveCols) * cardHeight;
         sheet.Mutate(ctx => ctx.DrawImage(img, new Point(x, y), 1f));
     }
 
