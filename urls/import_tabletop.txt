@@ -1,24 +1,64 @@
 
+Iniciales
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/iniciales.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/iniciales/back/back_neutro.png
+3 x 2 x 5
+
 Bosque
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/bosque.png
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/bosque/back/back_bosque.png
+3 x 4 x 10
 
 Claro
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/claro.png
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/claro/back/back_claro.png
-
-Iniciales
-http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/iniciales.png
-http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/iniciales/back/back_neutro.png
+3 x 3 x 8
 
 Montaña
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/monta%C3%B1a.png
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/monta%C3%B1a/back/back_monta%C3%B1a.png
+3 x 3 x 8
 
 Rio
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/rio.png
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/rio/back/back_rio.png
+3 x 2 x 6
 
 Ruinas
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sheets/ruinas.png
 http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/mazos/ruinas/back/back_ruinas.png
+3 x 3 x 9
+
+--- HEXAGONOS ---
+
+Hex Bosque
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Bosque.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Campamento
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Campamento.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Claro
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Claro.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Monta%C3%B1a
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Monta%C3%B1a.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Negro
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Negro.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Rio
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Rio.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Ruinas
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Ruinas.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Hex Santuario
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Santuario.png
+http://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
