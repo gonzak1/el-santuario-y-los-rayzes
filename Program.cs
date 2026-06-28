@@ -42,6 +42,7 @@ foreach (var subfolder in subfolders.OrderBy(d => d))
     int rows = (int)Math.Ceiling(files.Count / (double)effectiveCols);
 
     using var sheet = new Image<Rgba32>(effectiveCols * cardWidth, rows * cardHeight);
+    sheet.Mutate(ctx => ctx.BackgroundColor(Color.Black));
 
     for (int i = 0; i < files.Count; i++)
     {
