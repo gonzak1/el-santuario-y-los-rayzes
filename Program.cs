@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.Processing;
 string mazosFolder = @"imgs/mazos";
 string outputFolder = @"imgs/sheets";
 
-const int columns = 10;
+const int columns = 3;
 
 Directory.CreateDirectory(outputFolder);
 
