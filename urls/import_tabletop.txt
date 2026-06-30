@@ -62,3 +62,27 @@ https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/he
 Hex Santuario
 https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Santuario.png
 https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+--- SOMBRAS ---
+
+Sombra 1
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%201.png
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Sombra 2
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%202.png
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+Sombra 3
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%203.png
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png
+
+--- TOKENS ---
+
+Vida
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida.png
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida.png
+
+Vida perdida
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida%20perdida.png
+https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida%20perdida.png
