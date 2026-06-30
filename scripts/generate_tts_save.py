@@ -2,7 +2,7 @@
 Genera el save file de Tabletop Simulator para El Santuario y los Rayzes.
 Uso: py scripts/generate_tts_save.py
 Salida: El Santuario y los Rayzes.json
-Copialo a: Documentos\My Games\Tabletop Simulator\Saves\
+Copialo a: Documentos/My Games/Tabletop Simulator/Saves/
 Luego en TTS: Games > Load > El Santuario y los Rayzes
 """
 import json, os
@@ -34,27 +34,74 @@ def make_deck(nickname, deck_id, face, back, nw, nh, nc, x, z):
         "ContainedObjects":cards
     }
 
-def make_hex(nickname, url, back, x, z):
+def make_hex_terrain(nickname, face_url, back_url, deck_id, x=0, z=0):
+    """CardCustom hexagonal (Type 3). Para tiles de terreno."""
     return {
-        "Name":"Custom_Tile","Nickname":nickname,"GUID":guid(),
-        "Transform":tr(x,1,z,ry=180,sx=1.8,sz=1.8),
-        "CustomImage":{"ImageURL":url,"ImageSecondaryURL":back,
-                       "CustomTile":{"Type":1,"Thickness":0.1,"Stackable":False,"Stretch":True}}
+        "Name": "CardCustom",
+        "Nickname": nickname,
+        "GUID": guid(),
+        "Transform": tr(x, 1, z, ry=180),
+        "CardID": deck_id * 100,
+        "SidewaysCard": False,
+        "CustomDeck": {
+            str(deck_id): {
+                "FaceURL": face_url,
+                "BackURL": back_url,
+                "NumWidth": 1,
+                "NumHeight": 1,
+                "BackIsHidden": True,
+                "UniqueBack": False,
+                "Type": 3
+            }
+        }
     }
 
-def make_vida_token(face_url, back_url):
+def make_hex(nickname, url, back, x=0, z=0, scale=0.7):
+    """Custom_Tile hexagonal (Type 1). Para sombras dentro de bolsas."""
     return {
-        "Name":"Custom_Tile","Nickname":"Vida","GUID":guid(),
-        "Transform":tr(ry=180),
-        "CustomImage":{"ImageURL":face_url,"ImageSecondaryURL":back_url,
-                       "CustomTile":{"Type":2,"Thickness":0.1,"Stackable":True,"Stretch":True}}
+        "Name": "Custom_Tile",
+        "Nickname": nickname,
+        "GUID": guid(),
+        "Transform": tr(x, 1, z, ry=180, sx=scale, sz=scale),
+        "CustomImage": {
+            "ImageURL": url,
+            "ImageSecondaryURL": back,
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
+            "CustomTile": {"Type": 1, "Thickness": 0.1, "Stackable": False, "Stretch": False}
+        }
+    }
+
+def make_vida(face_url, back_url):
+    """CardCustom circular (Type 4). Frente=Vida, reverso=Vida perdida."""
+    deck_id = 9
+    return {
+        "Name": "CardCustom",
+        "Nickname": "Vida",
+        "GUID": guid(),
+        "Transform": tr(ry=180),
+        "CardID": deck_id * 100,
+        "SidewaysCard": False,
+        "CustomDeck": {
+            str(deck_id): {
+                "FaceURL": face_url,
+                "BackURL": back_url,
+                "NumWidth": 1,
+                "NumHeight": 1,
+                "BackIsHidden": True,
+                "UniqueBack": False,
+                "Type": 4
+            }
+        }
     }
 
 def make_bag(nickname, content, x, z):
     return {
-        "Name":"Infinite_Bag","Nickname":nickname,"GUID":guid(),
-        "Transform":tr(x,1,z),
-        "ContainedObjects":[content]
+        "Name": "Infinite_Bag",
+        "Nickname": nickname,
+        "GUID": guid(),
+        "Transform": tr(x, 1, z),
+        "ContainedObjects": [content]
     }
 
 objects = []
@@ -84,18 +131,17 @@ for i, (name, file) in enumerate([
     ("Hex Ruinas",     "Hex%20Ruinas.png"),
     ("Hex Santuario",  "Hex%20Santuario.png"),
 ]):
-    objects.append(make_hex(name, f"{H}/{file}", BACK_HEX, x=-12.25+i*3.5, z=0))
+    objects.append(make_hex_terrain(name, f"{H}/{file}", BACK_HEX, deck_id=10+i, x=-12.25+i*3.5, z=0))
 
-# ── SOMBRAS — bolsas infinitas de tiles hex ────────────────────────────────
+# ── SOMBRAS — bolsas infinitas ─────────────────────────────────────────────
 SO = f"{BASE}/imgs/sombras"
 for i in range(1, 4):
-    tile = make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, 0, 0)
+    tile = make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, scale=0.7)
     objects.append(make_bag(f"Sombra {i}", tile, x=-6+(i-1)*6, z=7))
 
-# ── VIDAS (una bolsa infinita, frente=Vida, reverso=Vida perdida) ──────────
+# ── VIDA — bolsa infinita, frente=Vida, reverso=Vida perdida ──────────────
 TK = f"{BASE}/imgs/tokens"
-tok = make_vida_token(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png")
-objects.append(make_bag("Vida", tok, x=12, z=7))
+objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=12, z=7))
 
 # ── GUARDAR ────────────────────────────────────────────────────────────────
 out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -111,4 +157,4 @@ save = {
 with open(out, "w", encoding="utf-8") as f:
     json.dump(save, f, indent=2, ensure_ascii=False)
 print(f"Generado: {out}")
-print(f"Copialo a: Documentos\\My Games\\Tabletop Simulator\\Saves\\")
+print(r"Copialo a: Documentos\My Games\Tabletop Simulator\Saves")

@@ -1025,7 +1025,7 @@
       ]
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Bosque",
       "GUID": "000035",
       "Transform": {
@@ -1035,23 +1035,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Bosque.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1000,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "10": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Bosque.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Campamento",
       "GUID": "000036",
       "Transform": {
@@ -1061,23 +1064,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Campamento.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1100,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "11": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Campamento.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Claro",
       "GUID": "000037",
       "Transform": {
@@ -1087,23 +1093,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Claro.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1200,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "12": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Claro.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Montaña",
       "GUID": "000038",
       "Transform": {
@@ -1113,23 +1122,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Monta%C3%B1a.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1300,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "13": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Monta%C3%B1a.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Negro",
       "GUID": "000039",
       "Transform": {
@@ -1139,23 +1151,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Negro.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1400,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "14": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Negro.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Río",
       "GUID": "00003a",
       "Transform": {
@@ -1165,23 +1180,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Rio.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1500,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "15": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Rio.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Ruinas",
       "GUID": "00003b",
       "Transform": {
@@ -1191,23 +1209,26 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Ruinas.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1600,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "16": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Ruinas.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
     {
-      "Name": "Custom_Tile",
+      "Name": "CardCustom",
       "Nickname": "Hex Santuario",
       "GUID": "00003c",
       "Transform": {
@@ -1217,18 +1238,21 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
-        "scaleX": 1.8,
+        "scaleX": 1,
         "scaleY": 1,
-        "scaleZ": 1.8
+        "scaleZ": 1
       },
-      "CustomImage": {
-        "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Santuario.png",
-        "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-        "CustomTile": {
-          "Type": 1,
-          "Thickness": 0.1,
-          "Stackable": false,
-          "Stretch": true
+      "CardID": 1700,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "17": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Santuario.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
         }
       }
     },
@@ -1259,18 +1283,20 @@
             "rotX": 0,
             "rotY": 180,
             "rotZ": 0,
-            "scaleX": 1.8,
+            "scaleX": 0.7,
             "scaleY": 1,
-            "scaleZ": 1.8
+            "scaleZ": 0.7
           },
           "CustomImage": {
             "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%201.png",
             "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
             "CustomTile": {
               "Type": 1,
               "Thickness": 0.1,
               "Stackable": false,
-              "Stretch": true
+              "Stretch": false
             }
           }
         }
@@ -1303,18 +1329,20 @@
             "rotX": 0,
             "rotY": 180,
             "rotZ": 0,
-            "scaleX": 1.8,
+            "scaleX": 0.7,
             "scaleY": 1,
-            "scaleZ": 1.8
+            "scaleZ": 0.7
           },
           "CustomImage": {
             "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%202.png",
             "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
             "CustomTile": {
               "Type": 1,
               "Thickness": 0.1,
               "Stackable": false,
-              "Stretch": true
+              "Stretch": false
             }
           }
         }
@@ -1347,18 +1375,20 @@
             "rotX": 0,
             "rotY": 180,
             "rotZ": 0,
-            "scaleX": 1.8,
+            "scaleX": 0.7,
             "scaleY": 1,
-            "scaleZ": 1.8
+            "scaleZ": 0.7
           },
           "CustomImage": {
             "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%203.png",
             "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
             "CustomTile": {
               "Type": 1,
               "Thickness": 0.1,
               "Stackable": false,
-              "Stretch": true
+              "Stretch": false
             }
           }
         }
@@ -1381,7 +1411,7 @@
       },
       "ContainedObjects": [
         {
-          "Name": "Custom_Tile",
+          "Name": "CardCustom",
           "Nickname": "Vida",
           "GUID": "000043",
           "Transform": {
@@ -1395,14 +1425,17 @@
             "scaleY": 1,
             "scaleZ": 1
           },
-          "CustomImage": {
-            "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida.png",
-            "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida%20perdida.png",
-            "CustomTile": {
-              "Type": 2,
-              "Thickness": 0.1,
-              "Stackable": true,
-              "Stretch": true
+          "CardID": 900,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "9": {
+              "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida.png",
+              "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida%20perdida.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 4
             }
           }
         }

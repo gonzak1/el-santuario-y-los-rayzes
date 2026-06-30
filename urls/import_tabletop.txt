@@ -81,8 +81,6 @@ https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/he
 
 Vida
 https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida.png
-https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida.png
 
 Vida perdida
-https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida%20perdida.png
 https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/Vida%20perdida.png
