@@ -1,8 +1,8 @@
 """
-Applies a perfect pointy-top hexagon mask + dark border to an image.
-Pointy-top = vertices at top and bottom, flat edges on left and right.
+Applies a perfect flat-top hexagon mask + dark border to an image.
+Flat-top = flat edges at top and bottom, vertices on left and right.
 
-Output size: TARGET_W x TARGET_H (887 x 1024) — exact pointy-top hex proportions (sqrt(3) : 2).
+Output size: TARGET_W x TARGET_H (1024 x 887) — exact flat-top hex proportions (2 : sqrt(3)).
 The hex fills the entire image with no wasted transparent space on any side.
 Uses 4x supersampling for smooth antialiased edges.
 
@@ -18,17 +18,17 @@ import os
 from PIL import Image, ImageDraw, ImageChops, ImageOps, ImageFilter
 
 BORDER_WIDTH = 65       # pixels of dark border inset from hex edge
-TARGET_H     = 1024
-TARGET_W     = round(TARGET_H * math.sqrt(3) / 2)   # 887 — exact pointy-top hex width
+TARGET_W     = 1024
+TARGET_H     = round(TARGET_W * math.sqrt(3) / 2)   # 887 — exact flat-top hex height
 
 def make_hex_mask(w, h, r, scale):
     W, H = w * scale, h * scale
     CX, CY = W / 2, H / 2
     R = r * scale
-    # Pointy-top: vertices at top/bottom, offset start angle by 30 degrees
+    # Flat-top: vertices at left/right, start angle 0 degrees
     verts = [
-        (CX + R * math.cos(math.radians(30 + 60 * i)),
-         CY + R * math.sin(math.radians(30 + 60 * i)))
+        (CX + R * math.cos(math.radians(60 * i)),
+         CY + R * math.sin(math.radians(60 * i)))
         for i in range(6)
     ]
     m = Image.new('L', (W, H), 0)
@@ -42,21 +42,21 @@ def apply_hex_mask(input_path, output_path=None):
     img = Image.open(input_path).convert('RGBA')
     src_w, src_h = img.size
 
-    # Scale to TARGET_H, then center-crop width to TARGET_W
-    scale_factor = TARGET_H / src_h
-    scaled_w = round(src_w * scale_factor)
-    img = img.resize((scaled_w, TARGET_H), Image.LANCZOS)
+    # Scale to TARGET_W, then center-crop height to TARGET_H
+    scale_factor = TARGET_W / src_w
+    scaled_h = round(src_h * scale_factor)
+    img = img.resize((TARGET_W, scaled_h), Image.LANCZOS)
 
-    if scaled_w > TARGET_W:
-        left = (scaled_w - TARGET_W) // 2
-        img = img.crop((left, 0, left + TARGET_W, TARGET_H))
-    elif scaled_w < TARGET_W:
+    if scaled_h > TARGET_H:
+        top = (scaled_h - TARGET_H) // 2
+        img = img.crop((0, top, TARGET_W, top + TARGET_H))
+    elif scaled_h < TARGET_H:
         padded = Image.new('RGBA', (TARGET_W, TARGET_H), (0, 0, 0, 0))
-        padded.paste(img, ((TARGET_W - scaled_w) // 2, 0))
+        padded.paste(img, (0, (TARGET_H - scaled_h) // 2))
         img = padded
 
     w, h = TARGET_W, TARGET_H
-    r = TARGET_H / 2   # circumradius — hex fills the image exactly (vertices touch top/bottom)
+    r = TARGET_W / 2   # circumradius — hex fills the image exactly (vertices touch left/right)
 
     scale = 4
 
