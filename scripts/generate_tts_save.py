@@ -95,6 +95,35 @@ def make_vida(face_url, back_url):
         }
     }
 
+def make_generar_bag(x, z):
+    lua = (
+        'function onLoad()\n'
+        '  self.createButton({\n'
+        '    click_function="doGenerar",\n'
+        '    function_owner=self,\n'
+        '    label="Generar Mapa",\n'
+        '    position={0,0.1,1.4},\n'
+        '    rotation={0,0,0},\n'
+        '    width=900, height=220, font_size=90,\n'
+        '    color={0.36,0.2,0.06},\n'
+        '    font_color={0.96,0.87,0.7},\n'
+        '    tooltip="Genera un nuevo mapa aleatorio"\n'
+        '  })\n'
+        'end\n'
+        'function doGenerar(obj,color)\n'
+        '  Global.call("onGenerateMap")\n'
+        'end\n'
+    )
+    return {
+        "Name": "Infinite_Bag",
+        "Nickname": "Mapa",
+        "GUID": guid(),
+        "Transform": tr(x, 1, z, ry=180, sx=0.7, sy=0.7, sz=0.7),
+        "ColorDiffuse": {"r": 0.2, "g": 0.45, "b": 0.15},
+        "LuaScript": lua,
+        "ContainedObjects": []
+    }
+
 def make_bag(nickname, content, x, z):
     return {
         "Name": "Infinite_Bag",
@@ -144,15 +173,158 @@ for i, sx in enumerate([-0.5, 3.0, 6.5], start=1):
 TK = f"{BASE}/imgs/tokens"
 objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=-6.5, z=13))
 
+# ── BOLSA GENERAR MAPA ─────────────────────────────────────────────────────
+objects.append(make_generar_bag(x=10.0, z=13))
+
+# ── LUA SCRIPT — Generador de Mapa ────────────────────────────────────────
+LUA_SCRIPT = (
+    'local BASE="https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/"\n'
+    'local BACK=BASE.."back/Back%20Hexagono.png"\n'
+    'local URLS={\n'
+    '  Campamento=BASE.."Hex%20Campamento.png",\n'
+    '  Bosque=BASE.."Hex%20Bosque.png",\n'
+    '  Claro=BASE.."Hex%20Claro.png",\n'
+    '  Ruinas=BASE.."Hex%20Ruinas.png",\n'
+    '  Rio=BASE.."Hex%20Rio.png",\n'
+    '  Santuario=BASE.."Hex%20Santuario.png",\n'
+    '  Montana=BASE.."Hex%20Monta%C3%B1a.png",\n'
+    '  Cierre=BASE.."Hex%20Negro.png",\n'
+    '}\n'
+    'local HEX_SIZE=1.55\n'
+    'local MAP_X,MAP_Z=0,0\n'
+    'local DIRS={{1,0},{1,-1},{0,-1},{-1,0},{-1,1},{0,1}}\n'
+    'local _guids,_did={},500\n'
+    '\n'
+    'local function hk(q,r) return q..","..r end\n'
+    'local function nbs(q,r)\n'
+    '  local t={} for _,d in ipairs(DIRS) do t[#t+1]={q+d[1],r+d[2]} end return t\n'
+    'end\n'
+    'local function dist(q1,r1,q2,r2)\n'
+    '  local dq,dr=q1-q2,r1-r2\n'
+    '  return(math.abs(dq)+math.abs(dr)+math.abs(-dq-dr))/2\n'
+    'end\n'
+    'local function a2w(q,r)\n'
+    '  return MAP_X+HEX_SIZE*1.5*q, MAP_Z+HEX_SIZE*math.sqrt(3)*(r+q/2)\n'
+    'end\n'
+    'local function shuf(t)\n'
+    '  for i=#t,2,-1 do local j=math.random(i) t[i],t[j]=t[j],t[i] end\n'
+    'end\n'
+    'local function makeDeck()\n'
+    '  local d={}\n'
+    '  for _=1,8 do d[#d+1]="Bosque" end\n'
+    '  for _=1,4 do d[#d+1]="Claro" end\n'
+    '  for _=1,3 do d[#d+1]="Ruinas" end\n'
+    '  for _=1,2 do d[#d+1]="Rio" end\n'
+    '  d[#d+1]="Santuario" shuf(d) return d\n'
+    'end\n'
+    '\n'
+    'local ms\n'
+    'local function ms_has(q,r) return ms.t[hk(q,r)]~=nil end\n'
+    'local function ms_get(q,r) return ms.t[hk(q,r)] end\n'
+    'local function ms_set(q,r,tipo,blk)\n'
+    '  ms.t[hk(q,r)]={q=q,r=r,tipo=tipo,blocker=blk or false}\n'
+    '  if not blk and tipo~="Montana" then\n'
+    '    local d=dist(0,0,q,r) if d>ms.maxD then ms.maxD=d end\n'
+    '  end\n'
+    'end\n'
+    'local function frontier()\n'
+    '  local seen,res={},{}\n'
+    '  for _,t in pairs(ms.t) do\n'
+    '    if not t.blocker then\n'
+    '      for _,nb in ipairs(nbs(t.q,t.r)) do\n'
+    '        local k=hk(nb[1],nb[2])\n'
+    '        if not ms.t[k] and not seen[k] then seen[k]=true res[#res+1]={nb[1],nb[2]} end\n'
+    '      end\n'
+    '    end\n'
+    '  end return res\n'
+    'end\n'
+    'local function closure(q,r)\n'
+    '  local ch={{q,r}} for _,nb in ipairs(nbs(q,r)) do ch[#ch+1]=nb end\n'
+    '  for _,p in ipairs(ch) do\n'
+    '    local cq,cr=p[1],p[2] local t=ms_get(cq,cr)\n'
+    '    if t then\n'
+    '      local thr=(t.tipo=="Campamento" or t.tipo=="Santuario") and 5 or 4\n'
+    '      local pl,em=0,{}\n'
+    '      for _,nb in ipairs(nbs(cq,cr)) do\n'
+    '        if ms_has(nb[1],nb[2]) then pl=pl+1 else em[#em+1]=nb end\n'
+    '      end\n'
+    '      if pl>=thr then\n'
+    '        table.sort(em,function(a,b) return dist(0,0,a[1],a[2])>dist(0,0,b[1],b[2]) end)\n'
+    '        for i=2,#em do\n'
+    '          local nq,nr=em[i][1],em[i][2]\n'
+    '          if not ms_has(nq,nr) then ms_set(nq,nr,"Montana",true) end\n'
+    '        end\n'
+    '      end\n'
+    '    end\n'
+    '  end\n'
+    'end\n'
+    'local function pickType(deck,q,r)\n'
+    '  if #deck==0 then return nil end\n'
+    '  if deck[1]=="Santuario" and dist(0,0,q,r)<4 then\n'
+    '    local s=table.remove(deck,1)\n'
+    '    local ins=math.max(#deck-3,0)+math.random(3)\n'
+    '    table.insert(deck,math.min(ins,#deck+1),s)\n'
+    '  end\n'
+    '  return table.remove(deck,1)\n'
+    'end\n'
+    'local function finalSeal()\n'
+    '  local seen,brd={},{}\n'
+    '  for _,t in pairs(ms.t) do\n'
+    '    for _,nb in ipairs(nbs(t.q,t.r)) do\n'
+    '      local k=hk(nb[1],nb[2])\n'
+    '      if not ms.t[k] and not seen[k] then seen[k]=true brd[#brd+1]={nb[1],nb[2]} end\n'
+    '    end\n'
+    '  end\n'
+    '  for _,p in ipairs(brd) do ms_set(p[1],p[2],"Cierre",true) end\n'
+    'end\n'
+    'local function generate()\n'
+    '  ms={t={},maxD=0} local deck=makeDeck()\n'
+    '  ms_set(0,0,"Campamento",false)\n'
+    '  while #deck>0 do\n'
+    '    local f=frontier() if #f==0 then break end\n'
+    '    local maxD=0\n'
+    '    for _,p in ipairs(f) do local d=dist(0,0,p[1],p[2]) if d>maxD then maxD=d end end\n'
+    '    local c={}\n'
+    '    for _,p in ipairs(f) do if dist(0,0,p[1],p[2])>=maxD-2 then c[#c+1]=p end end\n'
+    '    local p=c[math.random(#c)]\n'
+    '    local tipo=pickType(deck,p[1],p[2]) if not tipo then break end\n'
+    '    ms_set(p[1],p[2],tipo,false) closure(p[1],p[2])\n'
+    '  end\n'
+    '  finalSeal()\n'
+    'end\n'
+    'local function clearMap()\n'
+    '  for _,g in ipairs(_guids) do local o=getObjectFromGUID(g) if o then o.destruct() end end\n'
+    '  _guids={}\n'
+    'end\n'
+    'local function spawnTile(tipo,q,r)\n'
+    '  local url=URLS[tipo] if not url then return end\n'
+    '  local wx,wz=a2w(q,r) _did=_did+1 local did=_did\n'
+    '  local rz=(tipo=="Campamento" or tipo=="Cierre") and 0 or 180\n'
+    '  local d={Name="CardCustom",Nickname=tipo,\n'
+    '    Transform={posX=wx,posY=1.5,posZ=wz,rotX=0,rotY=180,rotZ=rz,scaleX=1,scaleY=1,scaleZ=1},\n'
+    '    CardID=did*100,SidewaysCard=false,\n'
+    '    CustomDeck={[tostring(did)]={FaceURL=url,BackURL=BACK,\n'
+    '      NumWidth=1,NumHeight=1,BackIsHidden=true,UniqueBack=false,Type=3}}}\n'
+    '  spawnObjectJSON({json=JSON.encode(d),callback_function=function(o)\n'
+    '    o.setDescription("mapa") _guids[#_guids+1]=o.getGUID()\n'
+    '  end})\n'
+    'end\n'
+    'function onGenerateMap()\n'
+    '  math.randomseed(math.floor(os.time()))\n'
+    '  clearMap() generate()\n'
+    '  for _,t in pairs(ms.t) do spawnTile(t.tipo,t.q,t.r) end\n'
+    'end\n'
+)
+
 # ── GUARDAR ────────────────────────────────────────────────────────────────
 out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                    "El Santuario y los Rayzes.json")
 save = {
     "SaveName": "El Santuario y los Rayzes",
     "GameMode": "", "Date": "", "VersionNumber": "", "GameType": "", "GameComplexity": "",
-    "Tags": [], "Gravity": 0.5, "PlayArea": 0.5,
+    "Tags": [], "Gravity": 0.5, "PlayArea": 1.0,
     "Table": "Table_RPG", "Sky": "Sky_Museum",
-    "Note": "", "Rules": "", "XmlUI": "", "LuaScript": "", "LuaScriptState": "",
+    "Note": "", "Rules": "", "XmlUI": "", "LuaScript": LUA_SCRIPT, "LuaScriptState": "",
     "ObjectStates": objects
 }
 with open(out, "w", encoding="utf-8") as f:

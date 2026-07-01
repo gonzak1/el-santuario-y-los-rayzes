@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prototipo Mapa Hex (cierre 3/6)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Ecos — Prototipo de Mapa Hex</h1>
+    <div class="controls">
+      <button id="regen">Generar nuevo mapa</button>
+      <label class="chk">
+        <input type="checkbox" id="showCoords" checked />
+        <span>Mostrar coordenadas</span>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <h3>Leyenda</h3>
+      <ul class="legend">
+        <li><span class="swatch camp"></span>Campamento</li>
+        <li><span class="swatch bosque"></span>Bosque</li>
+        <li><span class="swatch claro"></span>Claro</li>
+        <li><span class="swatch ruinas"></span>Ruinas</li>
+        <li><span class="swatch rio"></span>Río</li>
+        <li><span class="swatch santuario"></span>Santuario</li>
+        <li><span class="swatch montana"></span>Montaña (bloqueo)</li>
+        <li><span class="swatch cierre"></span>Cierre final</li>
+      </ul>
+      <div class="notes">
+        <p><strong>Regla cierre 3/6:</strong> si un hex tiene 3 vecinos ya colocados, los demás lados se bloquean con Montaña.</p>
+        <p><em>Mapa chico:</em> Campamento + 18 losetas (mazo: 8 Bosque, 4 Claro, 3 Ruinas, 2 Río, 1 Santuario). Las Montañas de cierre no cuentan como losetas del mazo.</p>
+      </div>
+    </aside>
+
+    <section class="stage">
+      <svg id="map" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa hexagonal"></svg>
+    </section>
+  </main>
+
+  <footer>
+    <small>Prototipo sin servidor — HTML/CSS/JS puro</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
