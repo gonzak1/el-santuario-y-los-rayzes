@@ -21,9 +21,9 @@
       "Nickname": "Iniciales",
       "GUID": "000006",
       "Transform": {
-        "posX": -12.5,
+        "posX": -10.0,
         "posY": 1,
-        "posZ": -7,
+        "posZ": 5,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -141,9 +141,9 @@
       "Nickname": "Bosque",
       "GUID": "000011",
       "Transform": {
-        "posX": -7.5,
+        "posX": -4.0,
         "posY": 1,
-        "posZ": -7,
+        "posZ": 5,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -351,9 +351,9 @@
       "Nickname": "Claro",
       "GUID": "00001a",
       "Transform": {
-        "posX": -2.5,
+        "posX": -0.5,
         "posY": 1,
-        "posZ": -7,
+        "posZ": 5,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -525,9 +525,9 @@
       "Nickname": "Montaña",
       "GUID": "000023",
       "Transform": {
-        "posX": 2.5,
+        "posX": 3.0,
         "posY": 1,
-        "posZ": -7,
+        "posZ": 5,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -699,9 +699,9 @@
       "Nickname": "Río",
       "GUID": "00002a",
       "Transform": {
-        "posX": 7.5,
+        "posX": 6.5,
         "posY": 1,
-        "posZ": -7,
+        "posZ": 5,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -837,9 +837,9 @@
       "Nickname": "Ruinas",
       "GUID": "000034",
       "Transform": {
-        "posX": 12.5,
+        "posX": 10.0,
         "posY": 1,
-        "posZ": -7,
+        "posZ": 5,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -1026,12 +1026,12 @@
     },
     {
       "Name": "CardCustom",
-      "Nickname": "Hex Bosque",
+      "Nickname": "Hex Campamento",
       "GUID": "000035",
       "Transform": {
         "posX": -12.25,
         "posY": 1,
-        "posZ": 0,
+        "posZ": 9,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1043,35 +1043,6 @@
       "SidewaysCard": false,
       "CustomDeck": {
         "10": {
-          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Bosque.png",
-          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-          "NumWidth": 1,
-          "NumHeight": 1,
-          "BackIsHidden": true,
-          "UniqueBack": false,
-          "Type": 3
-        }
-      }
-    },
-    {
-      "Name": "CardCustom",
-      "Nickname": "Hex Campamento",
-      "GUID": "000036",
-      "Transform": {
-        "posX": -8.75,
-        "posY": 1,
-        "posZ": 0,
-        "rotX": 0,
-        "rotY": 180,
-        "rotZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
-      },
-      "CardID": 1100,
-      "SidewaysCard": false,
-      "CustomDeck": {
-        "11": {
           "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Campamento.png",
           "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
           "NumWidth": 1,
@@ -1084,12 +1055,41 @@
     },
     {
       "Name": "CardCustom",
-      "Nickname": "Hex Claro",
+      "Nickname": "Hex Santuario",
+      "GUID": "000036",
+      "Transform": {
+        "posX": -8.75,
+        "posY": 1,
+        "posZ": 9,
+        "rotX": 0,
+        "rotY": 180,
+        "rotZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "CardID": 1100,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "11": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Santuario.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
+        }
+      }
+    },
+    {
+      "Name": "CardCustom",
+      "Nickname": "Hex Bosque",
       "GUID": "000037",
       "Transform": {
         "posX": -5.25,
         "posY": 1,
-        "posZ": 0,
+        "posZ": 9,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1101,6 +1101,35 @@
       "SidewaysCard": false,
       "CustomDeck": {
         "12": {
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Bosque.png",
+          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 3
+        }
+      }
+    },
+    {
+      "Name": "CardCustom",
+      "Nickname": "Hex Claro",
+      "GUID": "000038",
+      "Transform": {
+        "posX": -1.75,
+        "posY": 1,
+        "posZ": 9,
+        "rotX": 0,
+        "rotY": 180,
+        "rotZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "CardID": 1300,
+      "SidewaysCard": false,
+      "CustomDeck": {
+        "13": {
           "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Claro.png",
           "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
           "NumWidth": 1,
@@ -1114,40 +1143,11 @@
     {
       "Name": "CardCustom",
       "Nickname": "Hex Montaña",
-      "GUID": "000038",
-      "Transform": {
-        "posX": -1.75,
-        "posY": 1,
-        "posZ": 0,
-        "rotX": 0,
-        "rotY": 180,
-        "rotZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
-      },
-      "CardID": 1300,
-      "SidewaysCard": false,
-      "CustomDeck": {
-        "13": {
-          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Monta%C3%B1a.png",
-          "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
-          "NumWidth": 1,
-          "NumHeight": 1,
-          "BackIsHidden": true,
-          "UniqueBack": false,
-          "Type": 3
-        }
-      }
-    },
-    {
-      "Name": "CardCustom",
-      "Nickname": "Hex Negro",
       "GUID": "000039",
       "Transform": {
         "posX": 1.75,
         "posY": 1,
-        "posZ": 0,
+        "posZ": 9,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1159,7 +1159,7 @@
       "SidewaysCard": false,
       "CustomDeck": {
         "14": {
-          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Negro.png",
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Monta%C3%B1a.png",
           "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -1176,7 +1176,7 @@
       "Transform": {
         "posX": 5.25,
         "posY": 1,
-        "posZ": 0,
+        "posZ": 9,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1205,7 +1205,7 @@
       "Transform": {
         "posX": 8.75,
         "posY": 1,
-        "posZ": 0,
+        "posZ": 9,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1229,12 +1229,12 @@
     },
     {
       "Name": "CardCustom",
-      "Nickname": "Hex Santuario",
+      "Nickname": "Hex Negro",
       "GUID": "00003c",
       "Transform": {
         "posX": 12.25,
         "posY": 1,
-        "posZ": 0,
+        "posZ": 9,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1246,7 +1246,7 @@
       "SidewaysCard": false,
       "CustomDeck": {
         "17": {
-          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Santuario.png",
+          "FaceURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/Hex%20Negro.png",
           "BackURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -1261,15 +1261,20 @@
       "Nickname": "Sombra 1",
       "GUID": "00003e",
       "Transform": {
-        "posX": -6,
+        "posX": -0.5,
         "posY": 1,
-        "posZ": 7,
+        "posZ": 13,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.7,
+        "scaleY": 0.7,
+        "scaleZ": 0.7
+      },
+      "ColorDiffuse": {
+        "r": 0.6,
+        "g": 0.35,
+        "b": 0.1
       },
       "ContainedObjects": [
         {
@@ -1307,15 +1312,20 @@
       "Nickname": "Sombra 2",
       "GUID": "000040",
       "Transform": {
-        "posX": 0,
+        "posX": 3.0,
         "posY": 1,
-        "posZ": 7,
+        "posZ": 13,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.7,
+        "scaleY": 0.7,
+        "scaleZ": 0.7
+      },
+      "ColorDiffuse": {
+        "r": 0.6,
+        "g": 0.35,
+        "b": 0.1
       },
       "ContainedObjects": [
         {
@@ -1353,15 +1363,20 @@
       "Nickname": "Sombra 3",
       "GUID": "000042",
       "Transform": {
-        "posX": 6,
+        "posX": 6.5,
         "posY": 1,
-        "posZ": 7,
+        "posZ": 13,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.7,
+        "scaleY": 0.7,
+        "scaleZ": 0.7
+      },
+      "ColorDiffuse": {
+        "r": 0.6,
+        "g": 0.35,
+        "b": 0.1
       },
       "ContainedObjects": [
         {
@@ -1399,15 +1414,20 @@
       "Nickname": "Vida",
       "GUID": "000044",
       "Transform": {
-        "posX": 12,
+        "posX": -6.5,
         "posY": 1,
-        "posZ": 7,
+        "posZ": 13,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.7,
+        "scaleY": 0.7,
+        "scaleZ": 0.7
+      },
+      "ColorDiffuse": {
+        "r": 0.6,
+        "g": 0.35,
+        "b": 0.1
       },
       "ContainedObjects": [
         {
@@ -1421,9 +1441,9 @@
             "rotX": 0,
             "rotY": 180,
             "rotZ": 0,
-            "scaleX": 1,
-            "scaleY": 1,
-            "scaleZ": 1
+            "scaleX": 0.4,
+            "scaleY": 0.4,
+            "scaleZ": 0.4
           },
           "CardID": 900,
           "SidewaysCard": false,

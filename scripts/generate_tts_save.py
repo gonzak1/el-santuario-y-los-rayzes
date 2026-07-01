@@ -79,7 +79,7 @@ def make_vida(face_url, back_url):
         "Name": "CardCustom",
         "Nickname": "Vida",
         "GUID": guid(),
-        "Transform": tr(ry=180),
+        "Transform": tr(ry=180, sx=0.4, sy=0.4, sz=0.4),
         "CardID": deck_id * 100,
         "SidewaysCard": False,
         "CustomDeck": {
@@ -100,7 +100,8 @@ def make_bag(nickname, content, x, z):
         "Name": "Infinite_Bag",
         "Nickname": nickname,
         "GUID": guid(),
-        "Transform": tr(x, 1, z),
+        "Transform": tr(x, 1, z, sx=0.7, sy=0.7, sz=0.7),
+        "ColorDiffuse": {"r": 0.6, "g": 0.35, "b": 0.1},
         "ContainedObjects": [content]
     }
 
@@ -110,38 +111,38 @@ objects = []
 S = f"{BASE}/imgs/sheets"
 M = f"{BASE}/imgs/mazos"
 for did, name, face, back, nw, nh, nc, x in [
-    (1, "Iniciales", f"{S}/iniciales.png",     f"{M}/iniciales/back/back_neutro.png",           3, 2,  5, -12.5),
-    (2, "Bosque",    f"{S}/bosque.png",         f"{M}/bosque/back/back_bosque.png",              3, 4, 10,  -7.5),
-    (3, "Claro",     f"{S}/claro.png",          f"{M}/claro/back/back_claro.png",                3, 3,  8,  -2.5),
-    (4, "Montaña",   f"{S}/monta%C3%B1a.png",   f"{M}/monta%C3%B1a/back/back_monta%C3%B1a.png", 3, 3,  8,   2.5),
-    (5, "Río",       f"{S}/rio.png",            f"{M}/rio/back/back_rio.png",                   3, 2,  6,   7.5),
-    (6, "Ruinas",    f"{S}/ruinas.png",         f"{M}/ruinas/back/back_ruinas.png",             3, 3,  9,  12.5),
+    (1, "Iniciales", f"{S}/iniciales.png",     f"{M}/iniciales/back/back_neutro.png",           3, 2,  5, -10.0),
+    (2, "Bosque",    f"{S}/bosque.png",         f"{M}/bosque/back/back_bosque.png",              3, 4, 10,  -4.0),
+    (3, "Claro",     f"{S}/claro.png",          f"{M}/claro/back/back_claro.png",                3, 3,  8,  -0.5),
+    (4, "Montaña",   f"{S}/monta%C3%B1a.png",   f"{M}/monta%C3%B1a/back/back_monta%C3%B1a.png", 3, 3,  8,   3.0),
+    (5, "Río",       f"{S}/rio.png",            f"{M}/rio/back/back_rio.png",                   3, 2,  6,   6.5),
+    (6, "Ruinas",    f"{S}/ruinas.png",         f"{M}/ruinas/back/back_ruinas.png",             3, 3,  9,  10.0),
 ]:
-    objects.append(make_deck(name, did, face, back, nw, nh, nc, x, z=-7))
+    objects.append(make_deck(name, did, face, back, nw, nh, nc, x, z=5))
 
 # ── HEXÁGONOS DE TERRENO ───────────────────────────────────────────────────
 H = f"{BASE}/imgs/hexs"
 for i, (name, file) in enumerate([
-    ("Hex Bosque",     "Hex%20Bosque.png"),
     ("Hex Campamento", "Hex%20Campamento.png"),
+    ("Hex Santuario",  "Hex%20Santuario.png"),
+    ("Hex Bosque",     "Hex%20Bosque.png"),
     ("Hex Claro",      "Hex%20Claro.png"),
     ("Hex Montaña",    "Hex%20Monta%C3%B1a.png"),
-    ("Hex Negro",      "Hex%20Negro.png"),
     ("Hex Río",        "Hex%20Rio.png"),
     ("Hex Ruinas",     "Hex%20Ruinas.png"),
-    ("Hex Santuario",  "Hex%20Santuario.png"),
+    ("Hex Negro",      "Hex%20Negro.png"),
 ]):
-    objects.append(make_hex_terrain(name, f"{H}/{file}", BACK_HEX, deck_id=10+i, x=-12.25+i*3.5, z=0))
+    objects.append(make_hex_terrain(name, f"{H}/{file}", BACK_HEX, deck_id=10+i, x=-12.25+i*3.5, z=9))
 
 # ── SOMBRAS — bolsas infinitas ─────────────────────────────────────────────
 SO = f"{BASE}/imgs/sombras"
-for i in range(1, 4):
+for i, sx in enumerate([-0.5, 3.0, 6.5], start=1):
     tile = make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, scale=0.7)
-    objects.append(make_bag(f"Sombra {i}", tile, x=-6+(i-1)*6, z=7))
+    objects.append(make_bag(f"Sombra {i}", tile, x=sx, z=13))
 
 # ── VIDA — bolsa infinita, frente=Vida, reverso=Vida perdida ──────────────
 TK = f"{BASE}/imgs/tokens"
-objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=12, z=7))
+objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=-6.5, z=13))
 
 # ── GUARDAR ────────────────────────────────────────────────────────────────
 out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
