@@ -9,6 +9,30 @@ import json, os
 
 BASE     = "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main"
 BACK_HEX = f"{BASE}/imgs/hexs/back/Back%20Hexagono.png"
+BOARD_IMG = f"{BASE}/imgs/board/plataforma.png"
+
+# ── Plataforma de "supply" ──────────────────────────────────────────────────
+# Mazos, hexágonos de repuesto y bolsas se corren hacia afuera de la mesa y
+# quedan apoyados sobre esta plataforma (en vez de sobre el paño), para dejar
+# el paño completamente libre para el mapa generado.
+# Son valores de ajuste manual — no hay forma de medir la mesa real desde acá,
+# así que hay que probarlos en TTS e ir afinando:
+#   - PLATFORM_Z_SHIFT: cuánto se corre el supply en Z (hacia afuera de la mesa)
+#   - PLATFORM_Y_LIFT:  cuánto se levanta el supply para apoyar sobre la
+#                       plataforma sin atravesarla
+#   - PLATFORM_WIDTH / PLATFORM_DEPTH: tamaño real (en unidades TTS) de la
+#                       plataforma. Deben mantener el mismo aspect ratio que
+#                       imgs/board/plataforma.png (ver generate_platform_image.py)
+#   - PLATFORM_SCALE:   escala del Custom_Tile; ajustar junto con el tamaño
+#                       de la imagen si hace falta agrandar/achicar
+PLATFORM_Z_SHIFT  = 15.0
+PLATFORM_Y_LIFT   = 0.2
+PLATFORM_WIDTH    = 32.0
+PLATFORM_DEPTH    = 16.0
+PLATFORM_SCALE    = 8.0
+PLATFORM_CENTER_X = 0.0
+PLATFORM_CENTER_Z = 9.0 + PLATFORM_Z_SHIFT   # promedio de las filas de supply (5, 9, 13) + shift
+SUPPLY_Y = 1.0 + PLATFORM_Y_LIFT
 
 _n = [0]
 def guid():
@@ -19,13 +43,29 @@ def tr(x=0, y=1, z=0, rx=0, ry=0, rz=0, sx=1, sy=1, sz=1):
     return {"posX":x,"posY":y,"posZ":z,"rotX":rx,"rotY":ry,"rotZ":rz,
             "scaleX":sx,"scaleY":sy,"scaleZ":sz}
 
+def make_board():
+    """Custom_Tile rectangular (Type 0). Plataforma donde se apoya el supply."""
+    return {
+        "Name": "Custom_Tile",
+        "Nickname": "Plataforma",
+        "GUID": guid(),
+        "Transform": tr(PLATFORM_CENTER_X, 1, PLATFORM_CENTER_Z, sx=PLATFORM_SCALE, sz=PLATFORM_SCALE),
+        "CustomImage": {
+            "ImageURL": BOARD_IMG,
+            "ImageSecondaryURL": BOARD_IMG,
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
+            "CustomTile": {"Type": 0, "Thickness": 0.15, "Stackable": False, "Stretch": True}
+        }
+    }
+
 def make_deck(nickname, deck_id, face, back, nw, nh, nc, x, z):
     ids   = [deck_id * 100 + i for i in range(nc)]
     cards = [{"Name":"Card","Nickname":"","CardID":cid,
                "GUID":guid(),"Transform":tr(ry=180,rz=180)} for cid in ids]
     return {
         "Name":"DeckCustom","Nickname":nickname,"GUID":guid(),
-        "Transform":tr(x,1,z,ry=180,rz=180),
+        "Transform":tr(x,SUPPLY_Y,z,ry=180,rz=180),
         "DeckIDs":ids,
         "CustomDeck":{str(deck_id):{
             "FaceURL":face,"BackURL":back,"NumWidth":nw,"NumHeight":nh,
@@ -40,7 +80,7 @@ def make_hex_terrain(nickname, face_url, back_url, deck_id, x=0, z=0):
         "Name": "CardCustom",
         "Nickname": nickname,
         "GUID": guid(),
-        "Transform": tr(x, 1, z, ry=180),
+        "Transform": tr(x, SUPPLY_Y, z, ry=180),
         "CardID": deck_id * 100,
         "SidewaysCard": False,
         "CustomDeck": {
@@ -62,7 +102,7 @@ def make_hex(nickname, url, back, x=0, z=0, scale=0.7):
         "Name": "Custom_Tile",
         "Nickname": nickname,
         "GUID": guid(),
-        "Transform": tr(x, 1, z, ry=180, sx=scale, sz=scale),
+        "Transform": tr(x, SUPPLY_Y, z, ry=180, sx=scale, sz=scale),
         "CustomImage": {
             "ImageURL": url,
             "ImageSecondaryURL": back,
@@ -118,7 +158,7 @@ def make_generar_bag(x, z):
         "Name": "Infinite_Bag",
         "Nickname": "Mapa",
         "GUID": guid(),
-        "Transform": tr(x, 1, z, ry=180, sx=0.7, sy=0.7, sz=0.7),
+        "Transform": tr(x, SUPPLY_Y, z, ry=180, sx=0.7, sy=0.7, sz=0.7),
         "ColorDiffuse": {"r": 0.2, "g": 0.45, "b": 0.15},
         "LuaScript": lua,
         "ContainedObjects": []
@@ -129,12 +169,15 @@ def make_bag(nickname, content, x, z):
         "Name": "Infinite_Bag",
         "Nickname": nickname,
         "GUID": guid(),
-        "Transform": tr(x, 1, z, sx=0.7, sy=0.7, sz=0.7),
+        "Transform": tr(x, SUPPLY_Y, z, sx=0.7, sy=0.7, sz=0.7),
         "ColorDiffuse": {"r": 0.6, "g": 0.35, "b": 0.1},
         "ContainedObjects": [content]
     }
 
 objects = []
+
+# ── PLATAFORMA — apoya sobre el borde de la mesa, contiene todo el supply ──
+objects.append(make_board())
 
 # ── MAZOS ──────────────────────────────────────────────────────────────────
 S = f"{BASE}/imgs/sheets"
@@ -147,7 +190,7 @@ for did, name, face, back, nw, nh, nc, x in [
     (5, "Río",       f"{S}/rio.png",            f"{M}/rio/back/back_rio.png",                   3, 2,  6,   6.5),
     (6, "Ruinas",    f"{S}/ruinas.png",         f"{M}/ruinas/back/back_ruinas.png",             3, 3,  9,  10.0),
 ]:
-    objects.append(make_deck(name, did, face, back, nw, nh, nc, x, z=5))
+    objects.append(make_deck(name, did, face, back, nw, nh, nc, x, z=5 + PLATFORM_Z_SHIFT))
 
 # ── HEXÁGONOS DE TERRENO ───────────────────────────────────────────────────
 H = f"{BASE}/imgs/hexs"
@@ -161,20 +204,20 @@ for i, (name, file) in enumerate([
     ("Hex Ruinas",     "Hex%20Ruinas.png"),
     ("Hex Negro",      "Hex%20Negro.png"),
 ]):
-    objects.append(make_hex_terrain(name, f"{H}/{file}", BACK_HEX, deck_id=10+i, x=-12.25+i*3.5, z=9))
+    objects.append(make_hex_terrain(name, f"{H}/{file}", BACK_HEX, deck_id=10+i, x=-12.25+i*3.5, z=9 + PLATFORM_Z_SHIFT))
 
 # ── SOMBRAS — bolsas infinitas ─────────────────────────────────────────────
 SO = f"{BASE}/imgs/sombras"
 for i, sx in enumerate([-0.5, 3.0, 6.5], start=1):
     tile = make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, scale=0.7)
-    objects.append(make_bag(f"Sombra {i}", tile, x=sx, z=13))
+    objects.append(make_bag(f"Sombra {i}", tile, x=sx, z=13 + PLATFORM_Z_SHIFT))
 
 # ── VIDA — bolsa infinita, frente=Vida, reverso=Vida perdida ──────────────
 TK = f"{BASE}/imgs/tokens"
-objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=-6.5, z=13))
+objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=-6.5, z=13 + PLATFORM_Z_SHIFT))
 
 # ── BOLSA GENERAR MAPA ─────────────────────────────────────────────────────
-objects.append(make_generar_bag(x=10.0, z=13))
+objects.append(make_generar_bag(x=10.0, z=13 + PLATFORM_Z_SHIFT))
 
 # ── LUA SCRIPT — Generador de Mapa ────────────────────────────────────────
 LUA_SCRIPT = (
