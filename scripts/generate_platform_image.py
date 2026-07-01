@@ -2,30 +2,37 @@
 Genera la imagen de la plataforma de "supply" (mazos, hexágonos de repuesto,
 bolsas) que se apoya sobre el borde de la mesa, por afuera del paño.
 
+Tilea la textura "Wood Planks" (CC0, Poly Haven: https://polyhaven.com/a/wood_planks)
+guardada en imgs/board/source/wood_planks_diff_2k.jpg para cubrir el tamaño
+final de la plataforma.
+
 Uso: py scripts/generate_platform_image.py
 Salida: imgs/board/plataforma.png
 
-El aspect ratio de esta imagen (WIDTH_PX : DEPTH_PX) debe coincidir con
-PLATFORM_WIDTH / PLATFORM_DEPTH en scripts/generate_tts_save.py, porque el
-Custom_Tile usa WidthScale=0.0 (toma el ancho real de la imagen).
+El aspect ratio de esta imagen (WIDTH_PX : DEPTH_PX) no necesita coincidir con
+la escala real de la plataforma en TTS: el Custom_Tile usa Stretch=True, así
+que estira la imagen al tamaño que definan PLATFORM_SCALE_X / PLATFORM_SCALE_Z
+en scripts/generate_tts_save.py.
 """
 import os
-from PIL import Image, ImageDraw
+from PIL import Image
 
 WIDTH_PX  = 2048
 DEPTH_PX  = 1024
+TILE_PX   = 1024   # tamaño de cada repetición de la textura sobre el canvas
 
-WOOD_COLOR   = (92, 58, 33, 255)     # marrón madera, mismo tono que las bolsas
-BORDER_COLOR = (61, 38, 21, 255)     # borde más oscuro para dar profundidad
-BORDER_PX    = 24
-
-out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "imgs", "board")
+base_dir   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+source_path = os.path.join(base_dir, "imgs", "board", "source", "wood_planks_diff_2k.jpg")
+out_dir    = os.path.join(base_dir, "imgs", "board")
 os.makedirs(out_dir, exist_ok=True)
-out_path = os.path.join(out_dir, "plataforma.png")
+out_path   = os.path.join(out_dir, "plataforma.png")
 
-img = Image.new("RGBA", (WIDTH_PX, DEPTH_PX), WOOD_COLOR)
-draw = ImageDraw.Draw(img)
-draw.rectangle([0, 0, WIDTH_PX - 1, DEPTH_PX - 1], outline=BORDER_COLOR, width=BORDER_PX)
+tile = Image.open(source_path).convert("RGBA").resize((TILE_PX, TILE_PX), Image.LANCZOS)
 
-img.save(out_path)
+canvas = Image.new("RGBA", (WIDTH_PX, DEPTH_PX))
+for y in range(0, DEPTH_PX, TILE_PX):
+    for x in range(0, WIDTH_PX, TILE_PX):
+        canvas.paste(tile, (x, y))
+
+canvas.save(out_path)
 print(f"Generado: {out_path} ({WIDTH_PX}x{DEPTH_PX})")

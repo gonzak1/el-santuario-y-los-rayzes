@@ -22,15 +22,16 @@
       "GUID": "000001",
       "Transform": {
         "posX": 0.0,
-        "posY": 1,
-        "posZ": 24.0,
+        "posY": 3.5,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
-        "scaleX": 8.0,
+        "scaleX": 16.0,
         "scaleY": 1,
         "scaleZ": 8.0
       },
+      "Locked": true,
       "CustomImage": {
         "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/board/plataforma.png",
         "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/board/plataforma.png",
@@ -50,8 +51,8 @@
       "GUID": "000007",
       "Transform": {
         "posX": -10.0,
-        "posY": 1.2,
-        "posZ": 20.0,
+        "posY": 3.7,
+        "posZ": 22.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -170,8 +171,8 @@
       "GUID": "000012",
       "Transform": {
         "posX": -4.0,
-        "posY": 1.2,
-        "posZ": 20.0,
+        "posY": 3.7,
+        "posZ": 22.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -380,8 +381,8 @@
       "GUID": "00001b",
       "Transform": {
         "posX": -0.5,
-        "posY": 1.2,
-        "posZ": 20.0,
+        "posY": 3.7,
+        "posZ": 22.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -554,8 +555,8 @@
       "GUID": "000024",
       "Transform": {
         "posX": 3.0,
-        "posY": 1.2,
-        "posZ": 20.0,
+        "posY": 3.7,
+        "posZ": 22.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -728,8 +729,8 @@
       "GUID": "00002b",
       "Transform": {
         "posX": 6.5,
-        "posY": 1.2,
-        "posZ": 20.0,
+        "posY": 3.7,
+        "posZ": 22.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -866,8 +867,8 @@
       "GUID": "000035",
       "Transform": {
         "posX": 10.0,
-        "posY": 1.2,
-        "posZ": 20.0,
+        "posY": 3.7,
+        "posZ": 22.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
@@ -1058,8 +1059,8 @@
       "GUID": "000036",
       "Transform": {
         "posX": -12.25,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1087,8 +1088,8 @@
       "GUID": "000037",
       "Transform": {
         "posX": -8.75,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1116,8 +1117,8 @@
       "GUID": "000038",
       "Transform": {
         "posX": -5.25,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1145,8 +1146,8 @@
       "GUID": "000039",
       "Transform": {
         "posX": -1.75,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1174,8 +1175,8 @@
       "GUID": "00003a",
       "Transform": {
         "posX": 1.75,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1203,8 +1204,8 @@
       "GUID": "00003b",
       "Transform": {
         "posX": 5.25,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1232,8 +1233,8 @@
       "GUID": "00003c",
       "Transform": {
         "posX": 8.75,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1261,8 +1262,8 @@
       "GUID": "00003d",
       "Transform": {
         "posX": 12.25,
-        "posY": 1.2,
-        "posZ": 24.0,
+        "posY": 3.7,
+        "posZ": 26.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1290,8 +1291,8 @@
       "GUID": "00003f",
       "Transform": {
         "posX": -0.5,
-        "posY": 1.2,
-        "posZ": 28.0,
+        "posY": 3.7,
+        "posZ": 30.0,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
@@ -1311,7 +1312,7 @@
           "GUID": "00003e",
           "Transform": {
             "posX": 0,
-            "posY": 1.2,
+            "posY": 3.7,
             "posZ": 0,
             "rotX": 0,
             "rotY": 180,
@@ -1341,8 +1342,8 @@
       "GUID": "000041",
       "Transform": {
         "posX": 3.0,
-        "posY": 1.2,
-        "posZ": 28.0,
+        "posY": 3.7,
+        "posZ": 30.0,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
@@ -1362,7 +1363,7 @@
           "GUID": "000040",
           "Transform": {
             "posX": 0,
-            "posY": 1.2,
+            "posY": 3.7,
             "posZ": 0,
             "rotX": 0,
             "rotY": 180,
@@ -1392,8 +1393,8 @@
       "GUID": "000043",
       "Transform": {
         "posX": 6.5,
-        "posY": 1.2,
-        "posZ": 28.0,
+        "posY": 3.7,
+        "posZ": 30.0,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
@@ -1413,7 +1414,7 @@
           "GUID": "000042",
           "Transform": {
             "posX": 0,
-            "posY": 1.2,
+            "posY": 3.7,
             "posZ": 0,
             "rotX": 0,
             "rotY": 180,
@@ -1443,8 +1444,8 @@
       "GUID": "000045",
       "Transform": {
         "posX": -6.5,
-        "posY": 1.2,
-        "posZ": 28.0,
+        "posY": 3.7,
+        "posZ": 30.0,
         "rotX": 0,
         "rotY": 0,
         "rotZ": 0,
@@ -1495,8 +1496,8 @@
       "GUID": "000046",
       "Transform": {
         "posX": 10.0,
-        "posY": 1.2,
-        "posZ": 28.0,
+        "posY": 3.7,
+        "posZ": 30.0,
         "rotX": 0,
         "rotY": 180,
         "rotZ": 0,
@@ -1509,8 +1510,97 @@
         "g": 0.45,
         "b": 0.15
       },
-      "LuaScript": "function onLoad()\n  self.createButton({\n    click_function=\"doGenerar\",\n    function_owner=self,\n    label=\"Generar Mapa\",\n    position={0,0.1,1.4},\n    rotation={0,0,0},\n    width=900, height=220, font_size=90,\n    color={0.36,0.2,0.06},\n    font_color={0.96,0.87,0.7},\n    tooltip=\"Genera un nuevo mapa aleatorio\"\n  })\nend\nfunction doGenerar(obj,color)\n  Global.call(\"onGenerateMap\")\nend\n",
-      "ContainedObjects": []
+      "LuaScript": "function onLoad()\n  self.createButton({\n    click_function=\"doGenerar\",\n    function_owner=self,\n    label=\"Generar Mapa\",\n    position={0,0.1,1.4},\n    rotation={0,0,0},\n    width=1300, height=320, font_size=130,\n    color={1,1,1},\n    font_color={0.15,0.08,0.03},\n    tooltip=\"Genera un nuevo mapa aleatorio\"\n  })\nend\nfunction doGenerar(obj,color)\n  Global.call(\"onGenerateMap\")\nend\n",
+      "ContainedObjects": [
+        {
+          "Name": "PlayerPawn",
+          "Nickname": "Bordo",
+          "GUID": "000047",
+          "Transform": {
+            "posX": 0,
+            "posY": 1,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          },
+          "ColorDiffuse": {
+            "r": 0.45,
+            "g": 0.08,
+            "b": 0.12
+          },
+          "MaterialIndex": 0
+        },
+        {
+          "Name": "PlayerPawn",
+          "Nickname": "Verde oscuro",
+          "GUID": "000048",
+          "Transform": {
+            "posX": 0,
+            "posY": 1,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          },
+          "ColorDiffuse": {
+            "r": 0.05,
+            "g": 0.25,
+            "b": 0.15
+          },
+          "MaterialIndex": 0
+        },
+        {
+          "Name": "PlayerPawn",
+          "Nickname": "Azul marino",
+          "GUID": "000049",
+          "Transform": {
+            "posX": 0,
+            "posY": 1,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          },
+          "ColorDiffuse": {
+            "r": 0.05,
+            "g": 0.1,
+            "b": 0.35
+          },
+          "MaterialIndex": 0
+        },
+        {
+          "Name": "PlayerPawn",
+          "Nickname": "Gris oscuro",
+          "GUID": "00004a",
+          "Transform": {
+            "posX": 0,
+            "posY": 1,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          },
+          "ColorDiffuse": {
+            "r": 0.18,
+            "g": 0.18,
+            "b": 0.18
+          },
+          "MaterialIndex": 0
+        }
+      ]
     }
   ]
 }

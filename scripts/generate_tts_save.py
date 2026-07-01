@@ -18,21 +18,21 @@ BOARD_IMG = f"{BASE}/imgs/board/plataforma.png"
 # Son valores de ajuste manual — no hay forma de medir la mesa real desde acá,
 # así que hay que probarlos en TTS e ir afinando:
 #   - PLATFORM_Z_SHIFT: cuánto se corre el supply en Z (hacia afuera de la mesa)
-#   - PLATFORM_Y_LIFT:  cuánto se levanta el supply para apoyar sobre la
-#                       plataforma sin atravesarla
-#   - PLATFORM_WIDTH / PLATFORM_DEPTH: tamaño real (en unidades TTS) de la
-#                       plataforma. Deben mantener el mismo aspect ratio que
-#                       imgs/board/plataforma.png (ver generate_platform_image.py)
-#   - PLATFORM_SCALE:   escala del Custom_Tile; ajustar junto con el tamaño
-#                       de la imagen si hace falta agrandar/achicar
-PLATFORM_Z_SHIFT  = 15.0
-PLATFORM_Y_LIFT   = 0.2
-PLATFORM_WIDTH    = 32.0
-PLATFORM_DEPTH    = 16.0
-PLATFORM_SCALE    = 8.0
-PLATFORM_CENTER_X = 0.0
-PLATFORM_CENTER_Z = 9.0 + PLATFORM_Z_SHIFT   # promedio de las filas de supply (5, 9, 13) + shift
-SUPPLY_Y = 1.0 + PLATFORM_Y_LIFT
+#   - PLATFORM_Y:       altura de la plataforma; tiene que quedar apoyada sobre
+#                       la madera del borde de la mesa, no a la altura del paño
+#   - PLATFORM_Y_LIFT:  cuánto se levanta el supply por encima de la plataforma
+#                       para apoyar sobre ella sin atravesarla
+#   - PLATFORM_SCALE_X / PLATFORM_SCALE_Z: escala del Custom_Tile en cada eje
+#                       (independientes porque el tile usa Stretch=True, así
+#                       que no hace falta mantener el aspect ratio de la imagen)
+PLATFORM_Z_SHIFT   = 17.0
+PLATFORM_Y         = 3.5
+PLATFORM_Y_LIFT    = 0.2
+PLATFORM_SCALE_X   = 16.0
+PLATFORM_SCALE_Z   = 8.0
+PLATFORM_CENTER_X  = 0.0
+PLATFORM_CENTER_Z  = 9.0 + PLATFORM_Z_SHIFT   # promedio de las filas de supply (5, 9, 13) + shift
+SUPPLY_Y = PLATFORM_Y + PLATFORM_Y_LIFT
 
 _n = [0]
 def guid():
@@ -44,12 +44,13 @@ def tr(x=0, y=1, z=0, rx=0, ry=0, rz=0, sx=1, sy=1, sz=1):
             "scaleX":sx,"scaleY":sy,"scaleZ":sz}
 
 def make_board():
-    """Custom_Tile rectangular (Type 0). Plataforma donde se apoya el supply."""
+    """Custom_Tile rectangular (Type 0). Plataforma fija donde se apoya el supply."""
     return {
         "Name": "Custom_Tile",
         "Nickname": "Plataforma",
         "GUID": guid(),
-        "Transform": tr(PLATFORM_CENTER_X, 1, PLATFORM_CENTER_Z, sx=PLATFORM_SCALE, sz=PLATFORM_SCALE),
+        "Transform": tr(PLATFORM_CENTER_X, PLATFORM_Y, PLATFORM_CENTER_Z, sx=PLATFORM_SCALE_X, sz=PLATFORM_SCALE_Z),
+        "Locked": True,
         "CustomImage": {
             "ImageURL": BOARD_IMG,
             "ImageSecondaryURL": BOARD_IMG,
@@ -135,6 +136,24 @@ def make_vida(face_url, back_url):
         }
     }
 
+PAWN_COLORS = [
+    ("Bordo",        (0.45, 0.08, 0.12)),
+    ("Verde oscuro", (0.05, 0.25, 0.15)),
+    ("Azul marino",  (0.05, 0.10, 0.35)),
+    ("Gris oscuro",  (0.18, 0.18, 0.18)),
+]
+
+def make_pawn(nickname, rgb):
+    """PlayerPawn (Figurine) con tinte custom vía ColorDiffuse sobre MaterialIndex 0 (blanco)."""
+    return {
+        "Name": "PlayerPawn",
+        "Nickname": nickname,
+        "GUID": guid(),
+        "Transform": tr(ry=180),
+        "ColorDiffuse": {"r": rgb[0], "g": rgb[1], "b": rgb[2]},
+        "MaterialIndex": 0
+    }
+
 def make_generar_bag(x, z):
     lua = (
         'function onLoad()\n'
@@ -144,9 +163,9 @@ def make_generar_bag(x, z):
         '    label="Generar Mapa",\n'
         '    position={0,0.1,1.4},\n'
         '    rotation={0,0,0},\n'
-        '    width=900, height=220, font_size=90,\n'
-        '    color={0.36,0.2,0.06},\n'
-        '    font_color={0.96,0.87,0.7},\n'
+        '    width=1300, height=320, font_size=130,\n'
+        '    color={1,1,1},\n'
+        '    font_color={0.15,0.08,0.03},\n'
         '    tooltip="Genera un nuevo mapa aleatorio"\n'
         '  })\n'
         'end\n'
@@ -161,7 +180,7 @@ def make_generar_bag(x, z):
         "Transform": tr(x, SUPPLY_Y, z, ry=180, sx=0.7, sy=0.7, sz=0.7),
         "ColorDiffuse": {"r": 0.2, "g": 0.45, "b": 0.15},
         "LuaScript": lua,
-        "ContainedObjects": []
+        "ContainedObjects": [make_pawn(name, rgb) for name, rgb in PAWN_COLORS]
     }
 
 def make_bag(nickname, content, x, z):

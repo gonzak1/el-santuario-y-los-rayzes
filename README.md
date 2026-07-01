@@ -16,6 +16,7 @@ imgs/
   sombras/        # Tiles de sombra (Sombra 1, 2, 3)
   tokens/         # Tokens de Vida / Vida perdida
   board/          # Imagen de la plataforma de "supply" (plataforma.png)
+    source/       # Textura fuente descargada (wood_planks_diff_2k.jpg, Poly Haven CC0)
 scripts/
   hex_mask.py               # Script Python para dar forma hexagonal a los tiles
   generate_platform_image.py # Script Python que genera imgs/board/plataforma.png
@@ -66,7 +67,9 @@ El grosor del borde se ajusta con la constante `BORDER_WIDTH` al inicio del scri
 
 ## Script Python — Imagen de la plataforma (`scripts/generate_platform_image.py`)
 
-Genera `imgs/board/plataforma.png`, una imagen lisa color madera usada como textura de la "plataforma de supply" (ver sección siguiente). El aspect ratio de esta imagen tiene que coincidir con `PLATFORM_WIDTH` / `PLATFORM_DEPTH` de `generate_tts_save.py`.
+Genera `imgs/board/plataforma.png`, usada como textura de la "plataforma de supply" (ver sección siguiente). Tilea `imgs/board/source/wood_planks_diff_2k.jpg` — la textura ["Wood Planks"](https://polyhaven.com/a/wood_planks) de Poly Haven (CC0, dominio público, sin atribución requerida) — para cubrir el canvas final.
+
+El Custom_Tile de la plataforma usa `Stretch=True`, así que no hace falta que el aspect ratio de esta imagen coincida con la escala real en TTS.
 
 **Requisitos:** Python 3 + Pillow
 
@@ -84,9 +87,13 @@ Genera `El Santuario y los Rayzes.json`, el save file completo de Tabletop Simul
 Todo ese "supply" (mazos, hexágonos de repuesto, bolsas) se apoya sobre una **plataforma** (`Custom_Tile` rectangular) corrida hacia afuera de la mesa, dejando el paño completamente libre para el mapa generado (que sigue apareciendo centrado en el paño, sin cambios). La posición/tamaño de la plataforma se controla con estas constantes al inicio del script — son de ajuste manual, hay que probarlas en TTS e ir afinando:
 
 - `PLATFORM_Z_SHIFT`: cuánto se corre el supply en Z hacia afuera de la mesa.
-- `PLATFORM_Y_LIFT`: cuánto se levanta el supply para que apoye sobre la plataforma sin atravesarla.
-- `PLATFORM_WIDTH` / `PLATFORM_DEPTH`: tamaño real (en unidades TTS) de la plataforma. Deben mantener el mismo aspect ratio que `imgs/board/plataforma.png`.
-- `PLATFORM_SCALE`: escala del `Custom_Tile` de la plataforma.
+- `PLATFORM_Y`: altura de la plataforma (para que quede apoyada sobre la madera del borde, no a la altura del paño).
+- `PLATFORM_Y_LIFT`: cuánto se levanta el supply por encima de la plataforma para apoyar sobre ella sin atravesarla.
+- `PLATFORM_SCALE_X` / `PLATFORM_SCALE_Z`: escala del `Custom_Tile` de la plataforma en cada eje (independientes porque usa `Stretch=True`).
+
+La plataforma queda fija (`"Locked": true`): no tiene físicas, no se puede arrastrar ni empujar. Si hace falta reposicionarla a mano desde TTS, primero hay que desbloquearla (click derecho > Lock/Unlock).
+
+La bolsa verde "Generar Mapa" contiene 4 `PlayerPawn` (Bordo, Verde oscuro, Azul marino, Gris oscuro) definidos en `PAWN_COLORS`, con colores custom vía `ColorDiffuse`.
 
 Todas las URLs de imágenes apuntan al repo en GitHub (`raw.githubusercontent.com`), por lo que hay que subir los cambios de `imgs/` antes de regenerar o usar el save.
 
