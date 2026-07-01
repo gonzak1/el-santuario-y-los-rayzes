@@ -93,7 +93,11 @@ Todo ese "supply" (mazos, hexágonos de repuesto, bolsas) se apoya sobre una **p
 
 La plataforma queda fija (`"Locked": true`): no tiene físicas, no se puede arrastrar ni empujar. Si hace falta reposicionarla a mano desde TTS, primero hay que desbloquearla (click derecho > Lock/Unlock).
 
-La bolsa verde "Generar Mapa" contiene 4 `PlayerPawn` (Bordo, Verde oscuro, Azul marino, Gris oscuro) definidos en `PAWN_COLORS`, con colores custom vía `ColorDiffuse`.
+La mesa principal usa el preset `"Table": "Table_RPG"` (paño rojo). Se probó `Table_Custom` + `TableURL` con la textura de madera (quedaba más grande, pero no gustó el resultado visual) y se volvió atrás.
+
+La bolsa verde "Generar Mapa" (`Name: "Bag"`, **no** `Infinite_Bag` — ese tipo clona copias idénticas de un solo objeto) contiene 4 `PlayerPawn` distintos definidos en `PAWN_COLORS`: nombre, `ColorDiffuse` (RGB) y `MaterialIndex` (0=White, 1=Red, 2=Orange, 3=Yellow, 4=Green, 5=Blue, 6=Purple, 7=Pink, 8=Black — el color real en TTS lo define principalmente el `MaterialIndex`, `ColorDiffuse` solo lo afina). Colores actuales: Bordo (índice Red), Verde oscuro, Azul marino, Gris oscuro (índice Black).
+
+**Asientos (`Hands`):** el juego es para 4 jugadores máximo. Se dejan habilitados solo 4 colores (`HAND_COLORS = ["Red", "Brown", "White", "Orange"]`, con `DisableUnused: true` para apagar el resto) y los 4 se ubican del mismo lado de la mesa ("abajo", lado opuesto a la plataforma de supply). `HAND_XS` / `HAND_Z` son de ajuste manual, igual que las constantes de la plataforma.
 
 Todas las URLs de imágenes apuntan al repo en GitHub (`raw.githubusercontent.com`), por lo que hay que subir los cambios de `imgs/` antes de regenerar o usar el save.
 

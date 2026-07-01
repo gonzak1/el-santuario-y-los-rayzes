@@ -27,12 +27,21 @@ BOARD_IMG = f"{BASE}/imgs/board/plataforma.png"
 #                       que no hace falta mantener el aspect ratio de la imagen)
 PLATFORM_Z_SHIFT   = 17.0
 PLATFORM_Y         = 3.5
-PLATFORM_Y_LIFT    = 0.2
+PLATFORM_Y_LIFT    = 0.6
 PLATFORM_SCALE_X   = 16.0
 PLATFORM_SCALE_Z   = 8.0
 PLATFORM_CENTER_X  = 0.0
 PLATFORM_CENTER_Z  = 9.0 + PLATFORM_Z_SHIFT   # promedio de las filas de supply (5, 9, 13) + shift
 SUPPLY_Y = PLATFORM_Y + PLATFORM_Y_LIFT
+
+# ── Asientos (Hands) ─────────────────────────────────────────────────────────
+# Juego para 4 jugadores máximo. Se dejan solo estos 4 colores habilitados
+# (DisableUnused=True apaga el resto) y los 4 se ubican del mismo lado de la
+# mesa ("abajo"), lado opuesto a la plataforma de supply.
+# HAND_Z es de ajuste manual, igual que las constantes de la plataforma.
+HAND_COLORS = ["Red", "Brown", "White", "Orange"]
+HAND_XS     = [-12.0, -4.0, 4.0, 12.0]
+HAND_Z      = -20.0
 
 _n = [0]
 def guid():
@@ -137,21 +146,22 @@ def make_vida(face_url, back_url):
     }
 
 PAWN_COLORS = [
-    ("Bordo",        (0.45, 0.08, 0.12)),
-    ("Verde oscuro", (0.05, 0.25, 0.15)),
-    ("Azul marino",  (0.05, 0.10, 0.35)),
-    ("Gris oscuro",  (0.18, 0.18, 0.18)),
+    # nombre, ColorDiffuse RGB, MaterialIndex (0=White,1=Red,2=Orange,3=Yellow,4=Green,5=Blue,6=Purple,7=Pink,8=Black)
+    ("Bordo",        (0.45, 0.08, 0.12), 1),
+    ("Verde oscuro", (0.05, 0.25, 0.15), 4),
+    ("Azul marino",  (0.05, 0.10, 0.35), 5),
+    ("Gris oscuro",  (0.18, 0.18, 0.18), 8),
 ]
 
-def make_pawn(nickname, rgb):
-    """PlayerPawn (Figurine) con tinte custom vía ColorDiffuse sobre MaterialIndex 0 (blanco)."""
+def make_pawn(nickname, rgb, material_index):
+    """PlayerPawn (Figurine). El color real lo define MaterialIndex; ColorDiffuse lo afina/oscurece."""
     return {
         "Name": "PlayerPawn",
         "Nickname": nickname,
         "GUID": guid(),
         "Transform": tr(ry=180),
         "ColorDiffuse": {"r": rgb[0], "g": rgb[1], "b": rgb[2]},
-        "MaterialIndex": 0
+        "MaterialIndex": material_index
     }
 
 def make_generar_bag(x, z):
@@ -161,7 +171,7 @@ def make_generar_bag(x, z):
         '    click_function="doGenerar",\n'
         '    function_owner=self,\n'
         '    label="Generar Mapa",\n'
-        '    position={0,0.1,1.4},\n'
+        '    position={0,1.2,2.5},\n'
         '    rotation={0,0,0},\n'
         '    width=1300, height=320, font_size=130,\n'
         '    color={1,1,1},\n'
@@ -174,13 +184,13 @@ def make_generar_bag(x, z):
         'end\n'
     )
     return {
-        "Name": "Infinite_Bag",
+        "Name": "Bag",
         "Nickname": "Mapa",
         "GUID": guid(),
         "Transform": tr(x, SUPPLY_Y, z, ry=180, sx=0.7, sy=0.7, sz=0.7),
         "ColorDiffuse": {"r": 0.2, "g": 0.45, "b": 0.15},
         "LuaScript": lua,
-        "ContainedObjects": [make_pawn(name, rgb) for name, rgb in PAWN_COLORS]
+        "ContainedObjects": [make_pawn(name, rgb, mi) for name, rgb, mi in PAWN_COLORS]
     }
 
 def make_bag(nickname, content, x, z):
@@ -387,6 +397,15 @@ save = {
     "Tags": [], "Gravity": 0.5, "PlayArea": 1.0,
     "Table": "Table_RPG", "Sky": "Sky_Museum",
     "Note": "", "Rules": "", "XmlUI": "", "LuaScript": LUA_SCRIPT, "LuaScriptState": "",
+    "Hands": {
+        "Enable": True,
+        "DisableUnused": True,
+        "Hiding": "Default",
+        "HandTransforms": [
+            {"Color": color, "Transform": tr(x, 1, HAND_Z)}
+            for color, x in zip(HAND_COLORS, HAND_XS)
+        ]
+    },
     "ObjectStates": objects
 }
 with open(out, "w", encoding="utf-8") as f:
