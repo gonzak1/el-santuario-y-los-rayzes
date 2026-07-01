@@ -15,7 +15,7 @@ imgs/
     back/         # Reverso del hexágono
   sombras/        # Tiles de sombra (Sombra 1, 2, 3)
   tokens/         # Tokens de Vida / Vida perdida
-  board/          # Imagen de la plataforma de "supply" (plataforma.png)
+  board/          # Imagen de la plataforma de "supply" (plataforma.png) y del paño verde (felt_verde.png)
     source/       # Textura fuente descargada (wood_planks_diff_2k.jpg, Poly Haven CC0)
 scripts/
   hex_mask.py               # Script Python para dar forma hexagonal a los tiles
@@ -93,7 +93,9 @@ Todo ese "supply" (mazos, hexágonos de repuesto, bolsas) se apoya sobre una **p
 
 La plataforma queda fija (`"Locked": true`): no tiene físicas, no se puede arrastrar ni empujar. Si hace falta reposicionarla a mano desde TTS, primero hay que desbloquearla (click derecho > Lock/Unlock).
 
-La mesa principal usa el preset `"Table": "Table_RPG"` (paño rojo). Se probó `Table_Custom` + `TableURL` con la textura de madera (quedaba más grande, pero no gustó el resultado visual) y se volvió atrás.
+La mesa principal usa el preset `"Table": "Table_RPG"` (que trae paño rojo de fábrica). Se probó `Table_Custom` + `TableURL` con la textura de madera (quedaba más grande, pero no gustó el resultado visual) y se volvió atrás.
+
+Para tener el paño en verde **sin** cambiar la forma/tamaño real de la mesa (Table_RPG no permite recolorear su paño directamente — eso solo funciona con `Table_Custom`), se apoya un `Custom_Tile` verde plano y fijo (`"Locked": true`) justo encima del paño rojo, del tamaño del área jugable. Constantes de ajuste manual: `FELT_SCALE_X` / `FELT_SCALE_Z` (tamaño) y `FELT_Y` (altura, apenas por encima del paño para no atravesarlo ni flotar).
 
 La bolsa verde "Generar Mapa" (`Name: "Bag"`, **no** `Infinite_Bag` — ese tipo clona copias idénticas de un solo objeto) contiene 4 `PlayerPawn` distintos definidos en `PAWN_COLORS`: nombre, `ColorDiffuse` (RGB) y `MaterialIndex` (0=White, 1=Red, 2=Orange, 3=Yellow, 4=Green, 5=Blue, 6=Purple, 7=Pink, 8=Black — el color real en TTS lo define principalmente el `MaterialIndex`, `ColorDiffuse` solo lo afina). Colores actuales: Bordo (índice Red), Verde oscuro, Azul marino, Gris oscuro (índice Black).
 

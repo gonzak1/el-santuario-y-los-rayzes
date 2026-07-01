@@ -10,6 +10,19 @@ import json, os
 BASE     = "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main"
 BACK_HEX = f"{BASE}/imgs/hexs/back/Back%20Hexagono.png"
 BOARD_IMG = f"{BASE}/imgs/board/plataforma.png"
+FELT_IMG  = f"{BASE}/imgs/board/felt_verde.png"
+
+# ── Paño verde (overlay sobre Table_RPG) ────────────────────────────────────
+# Table_RPG no permite cambiar el color de su paño directamente (eso solo
+# funciona con Table_Custom, que cambia la malla/forma de la mesa). En vez de
+# eso, se apoya un Custom_Tile verde plano justo encima del paño rojo, del
+# tamaño del área jugable, para no tocar la forma/tamaño real de la mesa.
+# Valores de ajuste manual — no hay forma de medir el paño real desde acá.
+FELT_SCALE_X  = 18.0
+FELT_SCALE_Z  = 20.0
+FELT_Y        = 1.05
+FELT_CENTER_X = 0.0
+FELT_CENTER_Z = 0.0
 
 # ── Plataforma de "supply" ──────────────────────────────────────────────────
 # Mazos, hexágonos de repuesto y bolsas se corren hacia afuera de la mesa y
@@ -66,6 +79,23 @@ def make_board():
             "ImageScalar": 1.0,
             "WidthScale": 0.0,
             "CustomTile": {"Type": 0, "Thickness": 0.15, "Stackable": False, "Stretch": True}
+        }
+    }
+
+def make_felt():
+    """Custom_Tile rectangular (Type 0) verde, fijo, apoyado sobre el paño rojo de Table_RPG."""
+    return {
+        "Name": "Custom_Tile",
+        "Nickname": "Paño",
+        "GUID": guid(),
+        "Transform": tr(FELT_CENTER_X, FELT_Y, FELT_CENTER_Z, sx=FELT_SCALE_X, sz=FELT_SCALE_Z),
+        "Locked": True,
+        "CustomImage": {
+            "ImageURL": FELT_IMG,
+            "ImageSecondaryURL": FELT_IMG,
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
+            "CustomTile": {"Type": 0, "Thickness": 0.05, "Stackable": False, "Stretch": True}
         }
     }
 
@@ -204,6 +234,9 @@ def make_bag(nickname, content, x, z):
     }
 
 objects = []
+
+# ── PAÑO VERDE — overlay fijo sobre el paño rojo de Table_RPG ──────────────
+objects.append(make_felt())
 
 # ── PLATAFORMA — apoya sobre el borde de la mesa, contiene todo el supply ──
 objects.append(make_board())
