@@ -69,10 +69,15 @@ def make_board():
         }
     }
 
-def make_deck(nickname, deck_id, face, back, nw, nh, nc, x, z):
+def make_deck(nickname, deck_id, face, back, nw, nh, nc, x, z, card_info=None):
+    """card_info: lista de (nombre, descripcion) en el mismo orden que las
+    celdas de la sheet (fila por fila, izquierda a derecha), una por carta."""
     ids   = [deck_id * 100 + i for i in range(nc)]
-    cards = [{"Name":"Card","Nickname":"","CardID":cid,
-               "GUID":guid(),"Transform":tr(ry=180,rz=180)} for cid in ids]
+    if card_info is None:
+        card_info = [("", "")] * nc
+    cards = [{"Name":"Card","Nickname":cname,"Description":cdesc,"CardID":cid,
+               "GUID":guid(),"Transform":tr(ry=180,rz=180)}
+              for cid, (cname, cdesc) in zip(ids, card_info)]
     return {
         "Name":"DeckCustom","Nickname":nickname,"GUID":guid(),
         "Transform":tr(x,SUPPLY_Y,z,ry=180,rz=180),
@@ -173,7 +178,7 @@ def make_generar_bag(x, z):
         '    label="Generar Mapa",\n'
         '    position={0,1.2,2.5},\n'
         '    rotation={0,0,0},\n'
-        '    width=1300, height=320, font_size=130,\n'
+        '    width=2600, height=640, font_size=260,\n'
         '    color={1,1,1},\n'
         '    font_color={0.15,0.08,0.03},\n'
         '    tooltip="Genera un nuevo mapa aleatorio"\n'
@@ -191,6 +196,52 @@ def make_generar_bag(x, z):
         "ColorDiffuse": {"r": 0.2, "g": 0.45, "b": 0.15},
         "LuaScript": lua,
         "ContainedObjects": [make_pawn(name, rgb, mi) for name, rgb, mi in PAWN_COLORS]
+    }
+
+def make_sombras_bag(tiles, x, z):
+    """Bag (no Infinite_Bag) de Sombras: un Infinite_Bag con varios objetos
+    distintos adentro siempre saca el mismo (solo duplica el primero), así
+    que la aleatoriedad + reposición infinita se scriptea a mano: al sacar
+    una sombra arrastrando, se clona de vuelta adentro y se mezcla la bolsa.
+    Además tiene el botón para hacerlas aparecer en hexágonos ya descubiertos,
+    una por jugador sentado."""
+    lua = (
+        'function onLoad()\n'
+        '  self.createButton({\n'
+        '    click_function="doAparecer",\n'
+        '    function_owner=self,\n'
+        '    label="Aparecer Sombras",\n'
+        '    position={0,1.2,2.5},\n'
+        '    rotation={0,0,0},\n'
+        '    width=3400, height=640, font_size=220,\n'
+        '    color={1,1,1},\n'
+        '    font_color={0.15,0.08,0.03},\n'
+        '    tooltip="Hace aparecer una sombra por jugador sentado en hexágonos ya descubiertos"\n'
+        '  })\n'
+        'end\n'
+        'function doAparecer(obj,color)\n'
+        '  Global.call("onAparecerSombras")\n'
+        'end\n'
+        'function onObjectLeaveContainer(container, object)\n'
+        '  if container == self then\n'
+        '    self.putObject(object.clone({position={self.getPosition().x, self.getPosition().y+2, self.getPosition().z}}))\n'
+        '    startLuaCoroutine(self, "delayedShuffle")\n'
+        '  end\n'
+        'end\n'
+        'function delayedShuffle()\n'
+        '  for i=1,3 do coroutine.yield(0) end\n'
+        '  self.shuffle()\n'
+        '  return 1\n'
+        'end\n'
+    )
+    return {
+        "Name": "Bag",
+        "Nickname": "Sombras",
+        "GUID": guid(),
+        "Transform": tr(x, SUPPLY_Y, z, ry=180, sx=0.7, sy=0.7, sz=0.7),
+        "ColorDiffuse": {"r": 0.6, "g": 0.35, "b": 0.1},
+        "LuaScript": lua,
+        "ContainedObjects": tiles
     }
 
 def make_bag(nickname, contents, x, z):
@@ -213,6 +264,71 @@ objects = []
 objects.append(make_board())
 
 # ── MAZOS ──────────────────────────────────────────────────────────────────
+# Nombre + descripción de cada carta, en el mismo orden que las celdas de la
+# sheet correspondiente (fila por fila, izquierda a derecha). Texto tomado
+# de manual/Acciones por turno.md.
+CURA_1 = "Cura en 1 de vida al portador."
+CARD_INFO = {
+    "Iniciales": [
+        ("Caña", "Brinda +1 en pruebas de río. Se rompe con fallo crítico."),
+        ("Escudo de madera", "Al ser atacado puede lanzar 1D6 >= 5 para bloquear el daño."),
+        ("Espada de madera", "Si se obtiene un éxito crítico al atacar una sombra, puede atacar nuevamente."),
+        ("Pico", "Brinda +1 en pruebas de montaña. Se rompe con fallo crítico."),
+        ("Talismán verde", "No puede ser intercambiado. Evita la muerte dejando al portador con 1 de vida."),
+    ],
+    "Bosque": [
+        ("Capa de hojas", "Al activarla, la próxima Sombra te ignora y desaparece. Luego, si 1D6 >= 5 se conserva la capa, sino debe descartarse."),
+        ("Cuerda", "Puede utilizarse luego de una tirada de Río o Montaña para repetir la misma."),
+        ("Estatuilla mística", "Objeto clave: 5 Rayzes."),
+        ("Hierbas", CURA_1),
+        ("Hierbas", CURA_1),
+        ("Madera", "Tiene 2 usos posibles. Empalizada: coloca un token en el hexágono actual o uno aledaño visible, bloqueando el ingreso de las sombras durante el próximo turno. Antorcha: se usa antes de sacar una carta de una pila; si sale una carta de anulación de investigaciones, queda descartada."),
+        ("Madera", "Tiene 2 usos posibles. Empalizada: coloca un token en el hexágono actual o uno aledaño visible, bloqueando el ingreso de las sombras durante el próximo turno. Antorcha: se usa antes de sacar una carta de una pila; si sale una carta de anulación de investigaciones, queda descartada."),
+        ("Plaga de hongos", "Anula las investigaciones en los bosques durante el resto de la partida."),
+        ("Rastro", "El jugador puede mirar el tope de la pila de hexágonos (máximo 3) y reordenar a su antojo."),
+        ("Setas raras", "Puede utilizarse antes de una tirada para +2 en la prueba."),
+    ],
+    "Claro": [
+        ("Baya naranja", "Objeto clave: 7 Rayzes."),
+        ("Bayas", CURA_1),
+        ("Bayas", CURA_1),
+        ("Enredadera", "Anula las investigaciones en los claros durante el resto de la partida."),
+        ("Fogata", "Al activarla, todos en el hexágono del portador recuperan 1 de vida."),
+        ("Hoguera ritual", "Coloca un token en el hexágono actual. Todas las pruebas en ese hexágono tienen +1 de forma permanente."),
+        ("Mapa improvisado", "Explora todos los hexágonos aledaños al hexágono donde se encuentra el portador."),
+        ("Trampa sencilla", "Ahuyenta una Sombra en todo el mapa."),
+    ],
+    "Río": [
+        ("Bote de madera", "Permite moverse entre los hexágonos de ríos. Tiene un baúl que puede abrirse con una llave para sacar un objeto del río."),
+        ("Botella de agua pura", "Objeto clave: 10 Rayzes."),
+        ("Perla opaca", "Puede utilizarse antes de una tirada en Claro o Ruinas para +1 en la prueba."),
+        ("Pescado", CURA_1),
+        ("Pescado", CURA_1),
+        ("Zapato viejo", "Anula las investigaciones en los ríos durante el resto de la partida."),
+    ],
+    "Montaña": [
+        ("Cristal", "Objeto clave: 7 Rayzes."),
+        ("Cuarzo blanco", "Al utilizarlo, el portador elige dónde aparecerán las sombras del próximo turno."),
+        ("Mineral", "Puede utilizarse antes de una tirada para +1 en la prueba."),
+        ("Mineral", "Puede utilizarse antes de una tirada para +1 en la prueba."),
+        ("Mochila de montaña perdida", "Al utilizarla el jugador puede sacar una carta de cualquier lugar."),
+        ("Paso oculto", "Mientras el jugador disponga de esta carta, puede cruzar las montañas como si fueran el resto de los hexágonos. No debe descartarse."),
+        ("Piedra misteriosa", "Elige otro personaje para intercambiar sus posiciones."),
+        ("Temblor", "Anula las investigaciones en las montañas durante el resto de la partida."),
+    ],
+    "Ruinas": [
+        ("Cofre intacto (abierto)", "Objeto clave abierto: vale 10 Rayzes."),
+        ("Amuleto agrietado", "No puede ser utilizado por el jugador si el mismo posee el Talismán verde. Mientras el jugador tenga este objeto, cada sombra tiene 1D6 >= 5 de ser ahuyentada al ingresar al hexágono del portador."),
+        ("Cofre intacto", "Objeto clave. Cerrado: 1 Rayz. Abierto (con Llave vieja): 10 Rayzes."),
+        ("Llave vieja", "Se puede utilizar para abrir el cofre o la baulera del bote."),
+        ("Llave vieja", "Se puede utilizar para abrir el cofre o la baulera del bote."),
+        ("Moneda antigua", "Al comienzo del turno del portador, lanza una moneda (o 1D6 >= 4). Si acierta, el portador cura 1 de vida. Si falla, pierde 1 de vida y la moneda se descarta."),
+        ("Niebla tóxica", "Anula las investigaciones en las ruinas durante el resto de la partida."),
+        ("Pergamino", "El jugador puede tomar un mazo de terreno y mirar 3 cartas. Luego puede colocar una de esas tres arriba y mezclar el resto."),
+        ("Trampa desmontada", "Coloca un token en el hexágono actual. Si una Sombra entra a este hexágono, queda ahuyentada y desaparece; luego se quita el token y se descarta la carta."),
+    ],
+}
+
 S = f"{BASE}/imgs/sheets"
 M = f"{BASE}/imgs/mazos"
 for did, name, face, back, nw, nh, nc, x in [
@@ -223,7 +339,7 @@ for did, name, face, back, nw, nh, nc, x in [
     (5, "Río",       f"{S}/rio.png",            f"{M}/rio/back/back_rio.png",                   3, 2,  6,   6.5),
     (6, "Ruinas",    f"{S}/ruinas.png",         f"{M}/ruinas/back/back_ruinas.png",             3, 3,  9,  10.0),
 ]:
-    objects.append(make_deck(name, did, face, back, nw, nh, nc, x, z=5 + PLATFORM_Z_SHIFT))
+    objects.append(make_deck(name, did, face, back, nw, nh, nc, x, z=5 + PLATFORM_Z_SHIFT, card_info=CARD_INFO[name]))
 
 # ── HEXÁGONOS DE TERRENO ───────────────────────────────────────────────────
 H = f"{BASE}/imgs/hexs"
@@ -242,7 +358,7 @@ for i, (name, file) in enumerate([
 # ── SOMBRAS — una sola bolsa infinita con las 3 sombras (sale una al azar) ─
 SO = f"{BASE}/imgs/sombras"
 sombra_tiles = [make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, scale=0.7) for i in (1, 2, 3)]
-objects.append(make_bag("Sombras", sombra_tiles, x=-0.5, z=13 + PLATFORM_Z_SHIFT))
+objects.append(make_sombras_bag(sombra_tiles, x=-0.5, z=13 + PLATFORM_Z_SHIFT))
 
 # ── INVESTIGANDO — bolsa infinita de tokens, hex igual que las sombras ─────
 TK = f"{BASE}/imgs/tokens"
@@ -258,6 +374,8 @@ objects.append(make_generar_bag(x=10.0, z=13 + PLATFORM_Z_SHIFT))
 LUA_SCRIPT = (
     'local BASE="https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/"\n'
     'local BACK=BASE.."back/Back%20Hexagono.png"\n'
+    'local SBASE="https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/"\n'
+    'local SOMBRA_URLS={SBASE.."Sombra%201.png",SBASE.."Sombra%202.png",SBASE.."Sombra%203.png"}\n'
     'local URLS={\n'
     '  Campamento=BASE.."Hex%20Campamento.png",\n'
     '  Bosque=BASE.."Hex%20Bosque.png",\n'
@@ -374,6 +492,19 @@ LUA_SCRIPT = (
     '  for _,g in ipairs(_guids) do local o=getObjectFromGUID(g) if o then o.destruct() end end\n'
     '  _guids={}\n'
     'end\n'
+    'local function seatedCount()\n'
+    '  local n=0\n'
+    '  for _,p in ipairs(Player.getPlayers()) do if p.seated then n=n+1 end end\n'
+    '  return math.max(n,1)\n'
+    'end\n'
+    'local function discoveredMapTiles()\n'
+    '  local res={}\n'
+    '  for _,g in ipairs(_guids) do\n'
+    '    local o=getObjectFromGUID(g)\n'
+    '    if o and not o.is_face_down and o.getName()~="Cierre" then res[#res+1]=o end\n'
+    '  end\n'
+    '  return res\n'
+    'end\n'
     'local function spawnTile(tipo,q,r)\n'
     '  local url=URLS[tipo] if not url then return end\n'
     '  local wx,wz=a2w(q,r) _did=_did+1 local did=_did\n'
@@ -391,6 +522,21 @@ LUA_SCRIPT = (
     '  math.randomseed(math.floor(os.time()))\n'
     '  clearMap() generate()\n'
     '  for _,t in pairs(ms.t) do spawnTile(t.tipo,t.q,t.r) end\n'
+    'end\n'
+    'function onAparecerSombras()\n'
+    '  local candidates=discoveredMapTiles()\n'
+    '  if #candidates==0 then return end\n'
+    '  local n=seatedCount()\n'
+    '  for i=1,n do\n'
+    '    local tile=candidates[math.random(#candidates)]\n'
+    '    local pos=tile.getPosition()\n'
+    '    local url=SOMBRA_URLS[math.random(#SOMBRA_URLS)]\n'
+    '    local d={Name="Custom_Tile",Nickname="Sombra",\n'
+    '      Transform={posX=pos.x,posY=pos.y+1,posZ=pos.z,rotX=0,rotY=180,rotZ=0,scaleX=0.7,scaleY=0.7,scaleZ=0.7},\n'
+    '      CustomImage={ImageURL=url,ImageSecondaryURL=BACK,ImageScalar=1.0,WidthScale=0.0,\n'
+    '        CustomTile={Type=1,Thickness=0.1,Stackable=false,Stretch=false}}}\n'
+    '    spawnObjectJSON({json=JSON.encode(d)})\n'
+    '  end\n'
     'end\n'
 )
 

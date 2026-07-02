@@ -13,7 +13,7 @@
   "Note": "",
   "Rules": "",
   "XmlUI": "",
-  "LuaScript": "local BASE=\"https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/\"\nlocal BACK=BASE..\"back/Back%20Hexagono.png\"\nlocal URLS={\n  Campamento=BASE..\"Hex%20Campamento.png\",\n  Bosque=BASE..\"Hex%20Bosque.png\",\n  Claro=BASE..\"Hex%20Claro.png\",\n  Ruinas=BASE..\"Hex%20Ruinas.png\",\n  Rio=BASE..\"Hex%20Rio.png\",\n  Santuario=BASE..\"Hex%20Santuario.png\",\n  Montana=BASE..\"Hex%20Monta%C3%B1a.png\",\n  Cierre=BASE..\"Hex%20Negro.png\",\n}\nlocal HEX_SIZE=1.55\nlocal MAP_X,MAP_Z=0,0\nlocal DIRS={{1,0},{1,-1},{0,-1},{-1,0},{-1,1},{0,1}}\nlocal _guids,_did={},500\n\nlocal function hk(q,r) return q..\",\"..r end\nlocal function nbs(q,r)\n  local t={} for _,d in ipairs(DIRS) do t[#t+1]={q+d[1],r+d[2]} end return t\nend\nlocal function dist(q1,r1,q2,r2)\n  local dq,dr=q1-q2,r1-r2\n  return(math.abs(dq)+math.abs(dr)+math.abs(-dq-dr))/2\nend\nlocal function a2w(q,r)\n  return MAP_X+HEX_SIZE*1.5*q, MAP_Z+HEX_SIZE*math.sqrt(3)*(r+q/2)\nend\nlocal function shuf(t)\n  for i=#t,2,-1 do local j=math.random(i) t[i],t[j]=t[j],t[i] end\nend\nlocal function makeDeck()\n  local d={}\n  for _=1,8 do d[#d+1]=\"Bosque\" end\n  for _=1,4 do d[#d+1]=\"Claro\" end\n  for _=1,3 do d[#d+1]=\"Ruinas\" end\n  for _=1,2 do d[#d+1]=\"Rio\" end\n  d[#d+1]=\"Santuario\" shuf(d) return d\nend\n\nlocal ms\nlocal function ms_has(q,r) return ms.t[hk(q,r)]~=nil end\nlocal function ms_get(q,r) return ms.t[hk(q,r)] end\nlocal function ms_set(q,r,tipo,blk)\n  ms.t[hk(q,r)]={q=q,r=r,tipo=tipo,blocker=blk or false}\n  if not blk and tipo~=\"Montana\" then\n    local d=dist(0,0,q,r) if d>ms.maxD then ms.maxD=d end\n  end\nend\nlocal function frontier()\n  local seen,res={},{}\n  for _,t in pairs(ms.t) do\n    if not t.blocker then\n      for _,nb in ipairs(nbs(t.q,t.r)) do\n        local k=hk(nb[1],nb[2])\n        if not ms.t[k] and not seen[k] then seen[k]=true res[#res+1]={nb[1],nb[2]} end\n      end\n    end\n  end return res\nend\nlocal function closure(q,r)\n  local ch={{q,r}} for _,nb in ipairs(nbs(q,r)) do ch[#ch+1]=nb end\n  for _,p in ipairs(ch) do\n    local cq,cr=p[1],p[2] local t=ms_get(cq,cr)\n    if t then\n      local thr=(t.tipo==\"Campamento\" or t.tipo==\"Santuario\") and 5 or 4\n      local pl,em=0,{}\n      for _,nb in ipairs(nbs(cq,cr)) do\n        if ms_has(nb[1],nb[2]) then pl=pl+1 else em[#em+1]=nb end\n      end\n      if pl>=thr then\n        table.sort(em,function(a,b) return dist(0,0,a[1],a[2])>dist(0,0,b[1],b[2]) end)\n        for i=2,#em do\n          local nq,nr=em[i][1],em[i][2]\n          if not ms_has(nq,nr) then ms_set(nq,nr,\"Montana\",true) end\n        end\n      end\n    end\n  end\nend\nlocal function pickType(deck,q,r)\n  if #deck==0 then return nil end\n  if deck[1]==\"Santuario\" and dist(0,0,q,r)<4 then\n    local s=table.remove(deck,1)\n    local ins=math.max(#deck-3,0)+math.random(3)\n    table.insert(deck,math.min(ins,#deck+1),s)\n  end\n  return table.remove(deck,1)\nend\nlocal function finalSeal()\n  local seen,brd={},{}\n  for _,t in pairs(ms.t) do\n    for _,nb in ipairs(nbs(t.q,t.r)) do\n      local k=hk(nb[1],nb[2])\n      if not ms.t[k] and not seen[k] then seen[k]=true brd[#brd+1]={nb[1],nb[2]} end\n    end\n  end\n  for _,p in ipairs(brd) do ms_set(p[1],p[2],\"Cierre\",true) end\nend\nlocal function generate()\n  ms={t={},maxD=0} local deck=makeDeck()\n  ms_set(0,0,\"Campamento\",false)\n  while #deck>0 do\n    local f=frontier() if #f==0 then break end\n    local maxD=0\n    for _,p in ipairs(f) do local d=dist(0,0,p[1],p[2]) if d>maxD then maxD=d end end\n    local c={}\n    for _,p in ipairs(f) do if dist(0,0,p[1],p[2])>=maxD-2 then c[#c+1]=p end end\n    local p=c[math.random(#c)]\n    local tipo=pickType(deck,p[1],p[2]) if not tipo then break end\n    ms_set(p[1],p[2],tipo,false) closure(p[1],p[2])\n  end\n  finalSeal()\nend\nlocal function clearMap()\n  for _,g in ipairs(_guids) do local o=getObjectFromGUID(g) if o then o.destruct() end end\n  _guids={}\nend\nlocal function spawnTile(tipo,q,r)\n  local url=URLS[tipo] if not url then return end\n  local wx,wz=a2w(q,r) _did=_did+1 local did=_did\n  local rz=(tipo==\"Campamento\" or tipo==\"Cierre\") and 0 or 180\n  local d={Name=\"CardCustom\",Nickname=tipo,\n    Transform={posX=wx,posY=1.5,posZ=wz,rotX=0,rotY=180,rotZ=rz,scaleX=1,scaleY=1,scaleZ=1},\n    CardID=did*100,SidewaysCard=false,\n    CustomDeck={[tostring(did)]={FaceURL=url,BackURL=BACK,\n      NumWidth=1,NumHeight=1,BackIsHidden=true,UniqueBack=false,Type=3}}}\n  spawnObjectJSON({json=JSON.encode(d),callback_function=function(o)\n    o.setDescription(\"mapa\") _guids[#_guids+1]=o.getGUID()\n  end})\nend\nfunction onGenerateMap()\n  math.randomseed(math.floor(os.time()))\n  clearMap() generate()\n  for _,t in pairs(ms.t) do spawnTile(t.tipo,t.q,t.r) end\nend\n",
+  "LuaScript": "local BASE=\"https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/\"\nlocal BACK=BASE..\"back/Back%20Hexagono.png\"\nlocal SBASE=\"https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/\"\nlocal SOMBRA_URLS={SBASE..\"Sombra%201.png\",SBASE..\"Sombra%202.png\",SBASE..\"Sombra%203.png\"}\nlocal URLS={\n  Campamento=BASE..\"Hex%20Campamento.png\",\n  Bosque=BASE..\"Hex%20Bosque.png\",\n  Claro=BASE..\"Hex%20Claro.png\",\n  Ruinas=BASE..\"Hex%20Ruinas.png\",\n  Rio=BASE..\"Hex%20Rio.png\",\n  Santuario=BASE..\"Hex%20Santuario.png\",\n  Montana=BASE..\"Hex%20Monta%C3%B1a.png\",\n  Cierre=BASE..\"Hex%20Negro.png\",\n}\nlocal HEX_SIZE=1.55\nlocal MAP_X,MAP_Z=0,0\nlocal DIRS={{1,0},{1,-1},{0,-1},{-1,0},{-1,1},{0,1}}\nlocal _guids,_did={},500\n\nlocal function hk(q,r) return q..\",\"..r end\nlocal function nbs(q,r)\n  local t={} for _,d in ipairs(DIRS) do t[#t+1]={q+d[1],r+d[2]} end return t\nend\nlocal function dist(q1,r1,q2,r2)\n  local dq,dr=q1-q2,r1-r2\n  return(math.abs(dq)+math.abs(dr)+math.abs(-dq-dr))/2\nend\nlocal function a2w(q,r)\n  return MAP_X+HEX_SIZE*1.5*q, MAP_Z+HEX_SIZE*math.sqrt(3)*(r+q/2)\nend\nlocal function shuf(t)\n  for i=#t,2,-1 do local j=math.random(i) t[i],t[j]=t[j],t[i] end\nend\nlocal function makeDeck()\n  local d={}\n  for _=1,8 do d[#d+1]=\"Bosque\" end\n  for _=1,4 do d[#d+1]=\"Claro\" end\n  for _=1,3 do d[#d+1]=\"Ruinas\" end\n  for _=1,2 do d[#d+1]=\"Rio\" end\n  d[#d+1]=\"Santuario\" shuf(d) return d\nend\n\nlocal ms\nlocal function ms_has(q,r) return ms.t[hk(q,r)]~=nil end\nlocal function ms_get(q,r) return ms.t[hk(q,r)] end\nlocal function ms_set(q,r,tipo,blk)\n  ms.t[hk(q,r)]={q=q,r=r,tipo=tipo,blocker=blk or false}\n  if not blk and tipo~=\"Montana\" then\n    local d=dist(0,0,q,r) if d>ms.maxD then ms.maxD=d end\n  end\nend\nlocal function frontier()\n  local seen,res={},{}\n  for _,t in pairs(ms.t) do\n    if not t.blocker then\n      for _,nb in ipairs(nbs(t.q,t.r)) do\n        local k=hk(nb[1],nb[2])\n        if not ms.t[k] and not seen[k] then seen[k]=true res[#res+1]={nb[1],nb[2]} end\n      end\n    end\n  end return res\nend\nlocal function closure(q,r)\n  local ch={{q,r}} for _,nb in ipairs(nbs(q,r)) do ch[#ch+1]=nb end\n  for _,p in ipairs(ch) do\n    local cq,cr=p[1],p[2] local t=ms_get(cq,cr)\n    if t then\n      local thr=(t.tipo==\"Campamento\" or t.tipo==\"Santuario\") and 5 or 4\n      local pl,em=0,{}\n      for _,nb in ipairs(nbs(cq,cr)) do\n        if ms_has(nb[1],nb[2]) then pl=pl+1 else em[#em+1]=nb end\n      end\n      if pl>=thr then\n        table.sort(em,function(a,b) return dist(0,0,a[1],a[2])>dist(0,0,b[1],b[2]) end)\n        for i=2,#em do\n          local nq,nr=em[i][1],em[i][2]\n          if not ms_has(nq,nr) then ms_set(nq,nr,\"Montana\",true) end\n        end\n      end\n    end\n  end\nend\nlocal function pickType(deck,q,r)\n  if #deck==0 then return nil end\n  if deck[1]==\"Santuario\" and dist(0,0,q,r)<4 then\n    local s=table.remove(deck,1)\n    local ins=math.max(#deck-3,0)+math.random(3)\n    table.insert(deck,math.min(ins,#deck+1),s)\n  end\n  return table.remove(deck,1)\nend\nlocal function finalSeal()\n  local seen,brd={},{}\n  for _,t in pairs(ms.t) do\n    for _,nb in ipairs(nbs(t.q,t.r)) do\n      local k=hk(nb[1],nb[2])\n      if not ms.t[k] and not seen[k] then seen[k]=true brd[#brd+1]={nb[1],nb[2]} end\n    end\n  end\n  for _,p in ipairs(brd) do ms_set(p[1],p[2],\"Cierre\",true) end\nend\nlocal function generate()\n  ms={t={},maxD=0} local deck=makeDeck()\n  ms_set(0,0,\"Campamento\",false)\n  while #deck>0 do\n    local f=frontier() if #f==0 then break end\n    local maxD=0\n    for _,p in ipairs(f) do local d=dist(0,0,p[1],p[2]) if d>maxD then maxD=d end end\n    local c={}\n    for _,p in ipairs(f) do if dist(0,0,p[1],p[2])>=maxD-2 then c[#c+1]=p end end\n    local p=c[math.random(#c)]\n    local tipo=pickType(deck,p[1],p[2]) if not tipo then break end\n    ms_set(p[1],p[2],tipo,false) closure(p[1],p[2])\n  end\n  finalSeal()\nend\nlocal function clearMap()\n  for _,g in ipairs(_guids) do local o=getObjectFromGUID(g) if o then o.destruct() end end\n  _guids={}\nend\nlocal function seatedCount()\n  local n=0\n  for _,p in ipairs(Player.getPlayers()) do if p.seated then n=n+1 end end\n  return math.max(n,1)\nend\nlocal function discoveredMapTiles()\n  local res={}\n  for _,g in ipairs(_guids) do\n    local o=getObjectFromGUID(g)\n    if o and not o.is_face_down and o.getName()~=\"Cierre\" then res[#res+1]=o end\n  end\n  return res\nend\nlocal function spawnTile(tipo,q,r)\n  local url=URLS[tipo] if not url then return end\n  local wx,wz=a2w(q,r) _did=_did+1 local did=_did\n  local rz=(tipo==\"Campamento\" or tipo==\"Cierre\") and 0 or 180\n  local d={Name=\"CardCustom\",Nickname=tipo,\n    Transform={posX=wx,posY=1.5,posZ=wz,rotX=0,rotY=180,rotZ=rz,scaleX=1,scaleY=1,scaleZ=1},\n    CardID=did*100,SidewaysCard=false,\n    CustomDeck={[tostring(did)]={FaceURL=url,BackURL=BACK,\n      NumWidth=1,NumHeight=1,BackIsHidden=true,UniqueBack=false,Type=3}}}\n  spawnObjectJSON({json=JSON.encode(d),callback_function=function(o)\n    o.setDescription(\"mapa\") _guids[#_guids+1]=o.getGUID()\n  end})\nend\nfunction onGenerateMap()\n  math.randomseed(math.floor(os.time()))\n  clearMap() generate()\n  for _,t in pairs(ms.t) do spawnTile(t.tipo,t.q,t.r) end\nend\nfunction onAparecerSombras()\n  local candidates=discoveredMapTiles()\n  if #candidates==0 then return end\n  local n=seatedCount()\n  for i=1,n do\n    local tile=candidates[math.random(#candidates)]\n    local pos=tile.getPosition()\n    local url=SOMBRA_URLS[math.random(#SOMBRA_URLS)]\n    local d={Name=\"Custom_Tile\",Nickname=\"Sombra\",\n      Transform={posX=pos.x,posY=pos.y+1,posZ=pos.z,rotX=0,rotY=180,rotZ=0,scaleX=0.7,scaleY=0.7,scaleZ=0.7},\n      CustomImage={ImageURL=url,ImageSecondaryURL=BACK,ImageScalar=1.0,WidthScale=0.0,\n        CustomTile={Type=1,Thickness=0.1,Stackable=false,Stretch=false}}}\n    spawnObjectJSON({json=JSON.encode(d)})\n  end\nend\n",
   "LuaScriptState": "",
   "Hands": {
     "Enable": true,
@@ -143,7 +143,8 @@
       "ContainedObjects": [
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Caña",
+          "Description": "Brinda +1 en pruebas de río. Se rompe con fallo crítico.",
           "CardID": 100,
           "GUID": "000002",
           "Transform": {
@@ -160,7 +161,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Escudo de madera",
+          "Description": "Al ser atacado puede lanzar 1D6 >= 5 para bloquear el daño.",
           "CardID": 101,
           "GUID": "000003",
           "Transform": {
@@ -177,7 +179,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Espada de madera",
+          "Description": "Si se obtiene un éxito crítico al atacar una sombra, puede atacar nuevamente.",
           "CardID": 102,
           "GUID": "000004",
           "Transform": {
@@ -194,7 +197,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Pico",
+          "Description": "Brinda +1 en pruebas de montaña. Se rompe con fallo crítico.",
           "CardID": 103,
           "GUID": "000005",
           "Transform": {
@@ -211,7 +215,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Talismán verde",
+          "Description": "No puede ser intercambiado. Evita la muerte dejando al portador con 1 de vida.",
           "CardID": 104,
           "GUID": "000006",
           "Transform": {
@@ -268,7 +273,8 @@
       "ContainedObjects": [
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Capa de hojas",
+          "Description": "Al activarla, la próxima Sombra te ignora y desaparece. Luego, si 1D6 >= 5 se conserva la capa, sino debe descartarse.",
           "CardID": 200,
           "GUID": "000008",
           "Transform": {
@@ -285,7 +291,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Cuerda",
+          "Description": "Puede utilizarse luego de una tirada de Río o Montaña para repetir la misma.",
           "CardID": 201,
           "GUID": "000009",
           "Transform": {
@@ -302,7 +309,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Estatuilla mística",
+          "Description": "Objeto clave: 5 Rayzes.",
           "CardID": 202,
           "GUID": "00000a",
           "Transform": {
@@ -319,7 +327,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Hierbas",
+          "Description": "Cura en 1 de vida al portador.",
           "CardID": 203,
           "GUID": "00000b",
           "Transform": {
@@ -336,7 +345,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Hierbas",
+          "Description": "Cura en 1 de vida al portador.",
           "CardID": 204,
           "GUID": "00000c",
           "Transform": {
@@ -353,7 +363,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Madera",
+          "Description": "Tiene 2 usos posibles. Empalizada: coloca un token en el hexágono actual o uno aledaño visible, bloqueando el ingreso de las sombras durante el próximo turno. Antorcha: se usa antes de sacar una carta de una pila; si sale una carta de anulación de investigaciones, queda descartada.",
           "CardID": 205,
           "GUID": "00000d",
           "Transform": {
@@ -370,7 +381,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Madera",
+          "Description": "Tiene 2 usos posibles. Empalizada: coloca un token en el hexágono actual o uno aledaño visible, bloqueando el ingreso de las sombras durante el próximo turno. Antorcha: se usa antes de sacar una carta de una pila; si sale una carta de anulación de investigaciones, queda descartada.",
           "CardID": 206,
           "GUID": "00000e",
           "Transform": {
@@ -387,7 +399,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Plaga de hongos",
+          "Description": "Anula las investigaciones en los bosques durante el resto de la partida.",
           "CardID": 207,
           "GUID": "00000f",
           "Transform": {
@@ -404,7 +417,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Rastro",
+          "Description": "El jugador puede mirar el tope de la pila de hexágonos (máximo 3) y reordenar a su antojo.",
           "CardID": 208,
           "GUID": "000010",
           "Transform": {
@@ -421,7 +435,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Setas raras",
+          "Description": "Puede utilizarse antes de una tirada para +2 en la prueba.",
           "CardID": 209,
           "GUID": "000011",
           "Transform": {
@@ -476,7 +491,8 @@
       "ContainedObjects": [
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Baya naranja",
+          "Description": "Objeto clave: 7 Rayzes.",
           "CardID": 300,
           "GUID": "000013",
           "Transform": {
@@ -493,7 +509,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Bayas",
+          "Description": "Cura en 1 de vida al portador.",
           "CardID": 301,
           "GUID": "000014",
           "Transform": {
@@ -510,7 +527,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Bayas",
+          "Description": "Cura en 1 de vida al portador.",
           "CardID": 302,
           "GUID": "000015",
           "Transform": {
@@ -527,7 +545,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Enredadera",
+          "Description": "Anula las investigaciones en los claros durante el resto de la partida.",
           "CardID": 303,
           "GUID": "000016",
           "Transform": {
@@ -544,7 +563,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Fogata",
+          "Description": "Al activarla, todos en el hexágono del portador recuperan 1 de vida.",
           "CardID": 304,
           "GUID": "000017",
           "Transform": {
@@ -561,7 +581,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Hoguera ritual",
+          "Description": "Coloca un token en el hexágono actual. Todas las pruebas en ese hexágono tienen +1 de forma permanente.",
           "CardID": 305,
           "GUID": "000018",
           "Transform": {
@@ -578,7 +599,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Mapa improvisado",
+          "Description": "Explora todos los hexágonos aledaños al hexágono donde se encuentra el portador.",
           "CardID": 306,
           "GUID": "000019",
           "Transform": {
@@ -595,7 +617,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Trampa sencilla",
+          "Description": "Ahuyenta una Sombra en todo el mapa.",
           "CardID": 307,
           "GUID": "00001a",
           "Transform": {
@@ -650,7 +673,8 @@
       "ContainedObjects": [
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Cristal",
+          "Description": "Objeto clave: 7 Rayzes.",
           "CardID": 400,
           "GUID": "00001c",
           "Transform": {
@@ -667,7 +691,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Cuarzo blanco",
+          "Description": "Al utilizarlo, el portador elige dónde aparecerán las sombras del próximo turno.",
           "CardID": 401,
           "GUID": "00001d",
           "Transform": {
@@ -684,7 +709,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Mineral",
+          "Description": "Puede utilizarse antes de una tirada para +1 en la prueba.",
           "CardID": 402,
           "GUID": "00001e",
           "Transform": {
@@ -701,7 +727,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Mineral",
+          "Description": "Puede utilizarse antes de una tirada para +1 en la prueba.",
           "CardID": 403,
           "GUID": "00001f",
           "Transform": {
@@ -718,7 +745,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Mochila de montaña perdida",
+          "Description": "Al utilizarla el jugador puede sacar una carta de cualquier lugar.",
           "CardID": 404,
           "GUID": "000020",
           "Transform": {
@@ -735,7 +763,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Paso oculto",
+          "Description": "Mientras el jugador disponga de esta carta, puede cruzar las montañas como si fueran el resto de los hexágonos. No debe descartarse.",
           "CardID": 405,
           "GUID": "000021",
           "Transform": {
@@ -752,7 +781,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Piedra misteriosa",
+          "Description": "Elige otro personaje para intercambiar sus posiciones.",
           "CardID": 406,
           "GUID": "000022",
           "Transform": {
@@ -769,7 +799,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Temblor",
+          "Description": "Anula las investigaciones en las montañas durante el resto de la partida.",
           "CardID": 407,
           "GUID": "000023",
           "Transform": {
@@ -822,7 +853,8 @@
       "ContainedObjects": [
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Bote de madera",
+          "Description": "Permite moverse entre los hexágonos de ríos. Tiene un baúl que puede abrirse con una llave para sacar un objeto del río.",
           "CardID": 500,
           "GUID": "000025",
           "Transform": {
@@ -839,7 +871,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Botella de agua pura",
+          "Description": "Objeto clave: 10 Rayzes.",
           "CardID": 501,
           "GUID": "000026",
           "Transform": {
@@ -856,7 +889,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Perla opaca",
+          "Description": "Puede utilizarse antes de una tirada en Claro o Ruinas para +1 en la prueba.",
           "CardID": 502,
           "GUID": "000027",
           "Transform": {
@@ -873,7 +907,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Pescado",
+          "Description": "Cura en 1 de vida al portador.",
           "CardID": 503,
           "GUID": "000028",
           "Transform": {
@@ -890,7 +925,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Pescado",
+          "Description": "Cura en 1 de vida al portador.",
           "CardID": 504,
           "GUID": "000029",
           "Transform": {
@@ -907,7 +943,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Zapato viejo",
+          "Description": "Anula las investigaciones en los ríos durante el resto de la partida.",
           "CardID": 505,
           "GUID": "00002a",
           "Transform": {
@@ -963,7 +1000,8 @@
       "ContainedObjects": [
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Cofre intacto (abierto)",
+          "Description": "Objeto clave abierto: vale 10 Rayzes.",
           "CardID": 600,
           "GUID": "00002c",
           "Transform": {
@@ -980,7 +1018,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Amuleto agrietado",
+          "Description": "No puede ser utilizado por el jugador si el mismo posee el Talismán verde. Mientras el jugador tenga este objeto, cada sombra tiene 1D6 >= 5 de ser ahuyentada al ingresar al hexágono del portador.",
           "CardID": 601,
           "GUID": "00002d",
           "Transform": {
@@ -997,7 +1036,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Cofre intacto",
+          "Description": "Objeto clave. Cerrado: 1 Rayz. Abierto (con Llave vieja): 10 Rayzes.",
           "CardID": 602,
           "GUID": "00002e",
           "Transform": {
@@ -1014,7 +1054,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Llave vieja",
+          "Description": "Se puede utilizar para abrir el cofre o la baulera del bote.",
           "CardID": 603,
           "GUID": "00002f",
           "Transform": {
@@ -1031,7 +1072,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Llave vieja",
+          "Description": "Se puede utilizar para abrir el cofre o la baulera del bote.",
           "CardID": 604,
           "GUID": "000030",
           "Transform": {
@@ -1048,7 +1090,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Moneda antigua",
+          "Description": "Al comienzo del turno del portador, lanza una moneda (o 1D6 >= 4). Si acierta, el portador cura 1 de vida. Si falla, pierde 1 de vida y la moneda se descarta.",
           "CardID": 605,
           "GUID": "000031",
           "Transform": {
@@ -1065,7 +1108,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Niebla tóxica",
+          "Description": "Anula las investigaciones en las ruinas durante el resto de la partida.",
           "CardID": 606,
           "GUID": "000032",
           "Transform": {
@@ -1082,7 +1126,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Pergamino",
+          "Description": "El jugador puede tomar un mazo de terreno y mirar 3 cartas. Luego puede colocar una de esas tres arriba y mezclar el resto.",
           "CardID": 607,
           "GUID": "000033",
           "Transform": {
@@ -1099,7 +1144,8 @@
         },
         {
           "Name": "Card",
-          "Nickname": "",
+          "Nickname": "Trampa desmontada",
+          "Description": "Coloca un token en el hexágono actual. Si una Sombra entra a este hexágono, queda ahuyentada y desaparece; luego se quita el token y se descarta la carta.",
           "CardID": 608,
           "GUID": "000034",
           "Transform": {
@@ -1349,7 +1395,7 @@
       }
     },
     {
-      "Name": "Infinite_Bag",
+      "Name": "Bag",
       "Nickname": "Sombras",
       "GUID": "000041",
       "Transform": {
@@ -1357,7 +1403,7 @@
         "posY": 4.1,
         "posZ": 30.0,
         "rotX": 0,
-        "rotY": 0,
+        "rotY": 180,
         "rotZ": 0,
         "scaleX": 0.7,
         "scaleY": 0.7,
@@ -1368,6 +1414,7 @@
         "g": 0.35,
         "b": 0.1
       },
+      "LuaScript": "function onLoad()\n  self.createButton({\n    click_function=\"doAparecer\",\n    function_owner=self,\n    label=\"Aparecer Sombras\",\n    position={0,1.2,2.5},\n    rotation={0,0,0},\n    width=3400, height=640, font_size=220,\n    color={1,1,1},\n    font_color={0.15,0.08,0.03},\n    tooltip=\"Hace aparecer una sombra por jugador sentado en hexágonos ya descubiertos\"\n  })\nend\nfunction doAparecer(obj,color)\n  Global.call(\"onAparecerSombras\")\nend\nfunction onObjectLeaveContainer(container, object)\n  if container == self then\n    self.putObject(object.clone({position={self.getPosition().x, self.getPosition().y+2, self.getPosition().z}}))\n    startLuaCoroutine(self, \"delayedShuffle\")\n  end\nend\nfunction delayedShuffle()\n  for i=1,3 do coroutine.yield(0) end\n  self.shuffle()\n  return 1\nend\n",
       "ContainedObjects": [
         {
           "Name": "Custom_Tile",
@@ -1578,7 +1625,7 @@
         "g": 0.45,
         "b": 0.15
       },
-      "LuaScript": "function onLoad()\n  self.createButton({\n    click_function=\"doGenerar\",\n    function_owner=self,\n    label=\"Generar Mapa\",\n    position={0,1.2,2.5},\n    rotation={0,0,0},\n    width=1300, height=320, font_size=130,\n    color={1,1,1},\n    font_color={0.15,0.08,0.03},\n    tooltip=\"Genera un nuevo mapa aleatorio\"\n  })\nend\nfunction doGenerar(obj,color)\n  Global.call(\"onGenerateMap\")\nend\n",
+      "LuaScript": "function onLoad()\n  self.createButton({\n    click_function=\"doGenerar\",\n    function_owner=self,\n    label=\"Generar Mapa\",\n    position={0,1.2,2.5},\n    rotation={0,0,0},\n    width=2600, height=640, font_size=260,\n    color={1,1,1},\n    font_color={0.15,0.08,0.03},\n    tooltip=\"Genera un nuevo mapa aleatorio\"\n  })\nend\nfunction doGenerar(obj,color)\n  Global.call(\"onGenerateMap\")\nend\n",
       "ContainedObjects": [
         {
           "Name": "PlayerPawn",
