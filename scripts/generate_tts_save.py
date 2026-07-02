@@ -193,14 +193,18 @@ def make_generar_bag(x, z):
         "ContainedObjects": [make_pawn(name, rgb, mi) for name, rgb, mi in PAWN_COLORS]
     }
 
-def make_bag(nickname, content, x, z):
+def make_bag(nickname, contents, x, z):
+    """Infinite_Bag. `contents` puede ser un objeto único o una lista: con
+    varios objetos distintos adentro, cada extracción es al azar entre ellos."""
+    if not isinstance(contents, list):
+        contents = [contents]
     return {
         "Name": "Infinite_Bag",
         "Nickname": nickname,
         "GUID": guid(),
         "Transform": tr(x, SUPPLY_Y, z, sx=0.7, sy=0.7, sz=0.7),
         "ColorDiffuse": {"r": 0.6, "g": 0.35, "b": 0.1},
-        "ContainedObjects": [content]
+        "ContainedObjects": contents
     }
 
 objects = []
@@ -235,14 +239,16 @@ for i, (name, file) in enumerate([
 ]):
     objects.append(make_hex_terrain(name, f"{H}/{file}", BACK_HEX, deck_id=10+i, x=-12.25+i*3.5, z=9 + PLATFORM_Z_SHIFT))
 
-# ── SOMBRAS — bolsas infinitas ─────────────────────────────────────────────
+# ── SOMBRAS — una sola bolsa infinita con las 3 sombras (sale una al azar) ─
 SO = f"{BASE}/imgs/sombras"
-for i, sx in enumerate([-0.5, 3.0, 6.5], start=1):
-    tile = make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, scale=0.7)
-    objects.append(make_bag(f"Sombra {i}", tile, x=sx, z=13 + PLATFORM_Z_SHIFT))
+sombra_tiles = [make_hex(f"Sombra {i}", f"{SO}/Sombra%20{i}.png", BACK_HEX, scale=0.7) for i in (1, 2, 3)]
+objects.append(make_bag("Sombras", sombra_tiles, x=-0.5, z=13 + PLATFORM_Z_SHIFT))
+
+# ── INVESTIGANDO — bolsa infinita de tokens, hex igual que las sombras ─────
+TK = f"{BASE}/imgs/tokens"
+objects.append(make_bag("Investigando", make_hex("Investigando", f"{TK}/investigando.png", BACK_HEX, scale=0.7), x=3.0, z=13 + PLATFORM_Z_SHIFT))
 
 # ── VIDA — bolsa infinita, frente=Vida, reverso=Vida perdida ──────────────
-TK = f"{BASE}/imgs/tokens"
 objects.append(make_bag("Vida", make_vida(f"{TK}/Vida.png", f"{TK}/Vida%20perdida.png"), x=-6.5, z=13 + PLATFORM_Z_SHIFT))
 
 # ── BOLSA GENERAR MAPA ─────────────────────────────────────────────────────

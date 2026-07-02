@@ -1350,8 +1350,8 @@
     },
     {
       "Name": "Infinite_Bag",
-      "Nickname": "Sombra 1",
-      "GUID": "00003f",
+      "Nickname": "Sombras",
+      "GUID": "000041",
       "Transform": {
         "posX": -0.5,
         "posY": 4.1,
@@ -1396,34 +1396,11 @@
               "Stretch": false
             }
           }
-        }
-      ]
-    },
-    {
-      "Name": "Infinite_Bag",
-      "Nickname": "Sombra 2",
-      "GUID": "000041",
-      "Transform": {
-        "posX": 3.0,
-        "posY": 4.1,
-        "posZ": 30.0,
-        "rotX": 0,
-        "rotY": 0,
-        "rotZ": 0,
-        "scaleX": 0.7,
-        "scaleY": 0.7,
-        "scaleZ": 0.7
-      },
-      "ColorDiffuse": {
-        "r": 0.6,
-        "g": 0.35,
-        "b": 0.1
-      },
-      "ContainedObjects": [
+        },
         {
           "Name": "Custom_Tile",
           "Nickname": "Sombra 2",
-          "GUID": "000040",
+          "GUID": "00003f",
           "Transform": {
             "posX": 0,
             "posY": 4.1,
@@ -1447,15 +1424,43 @@
               "Stretch": false
             }
           }
+        },
+        {
+          "Name": "Custom_Tile",
+          "Nickname": "Sombra 3",
+          "GUID": "000040",
+          "Transform": {
+            "posX": 0,
+            "posY": 4.1,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 0,
+            "scaleX": 0.7,
+            "scaleY": 1,
+            "scaleZ": 0.7
+          },
+          "CustomImage": {
+            "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%203.png",
+            "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
+            "ImageScalar": 1.0,
+            "WidthScale": 0.0,
+            "CustomTile": {
+              "Type": 1,
+              "Thickness": 0.1,
+              "Stackable": false,
+              "Stretch": false
+            }
+          }
         }
       ]
     },
     {
       "Name": "Infinite_Bag",
-      "Nickname": "Sombra 3",
+      "Nickname": "Investigando",
       "GUID": "000043",
       "Transform": {
-        "posX": 6.5,
+        "posX": 3.0,
         "posY": 4.1,
         "posZ": 30.0,
         "rotX": 0,
@@ -1473,7 +1478,7 @@
       "ContainedObjects": [
         {
           "Name": "Custom_Tile",
-          "Nickname": "Sombra 3",
+          "Nickname": "Investigando",
           "GUID": "000042",
           "Transform": {
             "posX": 0,
@@ -1487,7 +1492,7 @@
             "scaleZ": 0.7
           },
           "CustomImage": {
-            "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/sombras/Sombra%203.png",
+            "ImageURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/tokens/investigando.png",
             "ImageSecondaryURL": "https://raw.githubusercontent.com/gonzak1/el-santuario-y-los-rayzes/main/imgs/hexs/back/Back%20Hexagono.png",
             "ImageScalar": 1.0,
             "WidthScale": 0.0,
